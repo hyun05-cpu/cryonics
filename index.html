@@ -313,22 +313,24 @@ img{display:block;max-width:100%}
 }
 .perfuse .pf-fill{
   position:absolute;inset:0;
-  background:linear-gradient(95deg,
-    rgba(146,198,226,.50) 0%,
-    rgba(186,224,242,.34) 45%,
-    rgba(214,240,252,.22) 100%);
-  clip-path:inset(0 calc(100% - var(--pf)) 0 0);
-  filter:blur(1px);
+  background:linear-gradient(100deg,
+    rgba(122,182,214,.42) 0%,
+    rgba(158,206,230,.26) 55%,
+    rgba(198,230,244,.12) 100%);
+  -webkit-mask-image:linear-gradient(95deg,
+    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.35) calc(var(--pf) - 5%), transparent var(--pf));
+  mask-image:linear-gradient(95deg,
+    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.35) calc(var(--pf) - 5%), transparent var(--pf));
+  filter:blur(3px);
 }
 .perfuse .pf-edge{
-  position:absolute;top:0;bottom:0;left:var(--pf);width:16vw;
-  transform:translateX(-50%);
-  background:linear-gradient(90deg,
-    rgba(226,244,252,0) 0%,
-    rgba(226,244,252,.55) 48%,
-    rgba(255,255,255,.85) 52%,
-    rgba(226,244,252,0) 100%);
-  filter:blur(10px);opacity:.9;
+  position:absolute;top:-12%;bottom:-12%;left:var(--pf);width:26vw;
+  transform:translateX(-62%) rotate(4deg);
+  background:radial-gradient(60% 50% at 62% 50%,
+    rgba(232,248,255,.55) 0%,
+    rgba(180,220,242,.22) 42%,
+    rgba(180,220,242,0) 72%);
+  filter:blur(26px);opacity:.85;
 }
 
 /* ─────────────────────────────────────────────
@@ -339,13 +341,20 @@ img{display:block;max-width:100%}
 .cb-track i{display:block;height:100%}
 .cb-a{flex:6;background:var(--frost)}
 .cb-b{flex:15;background:rgba(169,188,199,.42)}
-.cb-legend{display:flex;justify-content:space-between;gap:16px;margin:16px 0 0}
+.cb-legend{display:flex;gap:14px;margin:18px 0 0}
 .cb-legend b{
-  display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;
-  color:#BCCBD4;letter-spacing:.02em;text-shadow:0 1px 10px rgba(4,7,10,.96);
+  display:block;font-size:clamp(13px,1.35vw,16px);font-weight:600;
+  color:#E4EDF2;letter-spacing:-.01em;text-shadow:0 1px 10px rgba(4,7,10,.96);
+  position:relative;padding-top:14px;text-align:left;
 }
-.cb-legend b em{width:8px;height:8px;flex:none;font-style:normal}
-.cb-legend b.a em{background:var(--frost)}
+.cb-legend b.a{flex:6}
+.cb-legend b.b{flex:15}
+.cb-legend b i{
+  display:block;font-style:normal;font-size:11.5px;font-weight:500;
+  letter-spacing:.06em;color:var(--slate-lt);margin:0 0 5px;opacity:.85;
+}
+.cb-legend b em{position:absolute;top:0;left:0;width:22px;height:2px}
+.cb-legend b.a em{background:var(--frost);box-shadow:0 0 10px rgba(143,186,212,.8)}
 .cb-legend b.b em{background:rgba(169,188,199,.42)}
 
 /* ─────────────────────────────────────────────
@@ -372,11 +381,14 @@ img{display:block;max-width:100%}
    ───────────────────────────────────────────── */
 .monitor{
   position:absolute;left:var(--gut);top:clamp(72px,11vh,112px);z-index:6;
-  font-size:12px;letter-spacing:.14em;color:var(--frost);font-weight:500;
-  font-variant-numeric:tabular-nums;line-height:1.9;
-  text-shadow:0 1px 12px rgba(4,7,10,.98);
+  font-size:clamp(14px,1.5vw,18px);letter-spacing:.16em;color:var(--frost);font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.75;
+  text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 24px rgba(143,186,212,.35);
 }
-.monitor span{display:block;color:rgba(190,206,215,.8);letter-spacing:.06em;font-size:11.5px}
+.monitor span{
+  display:block;color:#CFDCE4;letter-spacing:.06em;font-weight:500;
+  font-size:clamp(12.5px,1.25vw,15px);margin-top:4px;
+}
 
 /* ─────────────────────────────────────────────
    800명 점 분포
@@ -529,7 +541,7 @@ img{display:block;max-width:100%}
 }
 .choices{display:flex;gap:14px;justify-content:center;margin:46px 0 0;flex-wrap:wrap}
 .choice{
-  font-family:var(--sans);font-size:15px;font-weight:500;color:var(--chalk);
+  font-family:var(--sans);font-size:clamp(15px,1.6vw,18px);font-weight:500;color:var(--chalk);
   background:transparent;border:1px solid rgba(169,188,199,.34);
   padding:16px 40px;cursor:pointer;letter-spacing:.02em;
   transition:background .25s,border-color .25s,color .25s;
@@ -537,13 +549,13 @@ img{display:block;max-width:100%}
 .choice:hover{background:rgba(143,186,212,.10);border-color:var(--frost)}
 .choice[aria-pressed="true"]{background:var(--chalk);color:var(--ink);border-color:var(--chalk)}
 .answer{
-  margin:34px auto 0;max-width:44ch;font-size:15px;line-height:1.9;
-  color:var(--slate-lt);font-weight:350;min-height:1px;
+  margin:40px auto 0;max-width:40ch;font-size:clamp(16px,1.7vw,20px);line-height:1.85;
+  color:#D4E0E7;font-weight:400;min-height:1px;
   opacity:0;transition:opacity .5s;
 }
 .answer.show{opacity:1}
 .answer em{font-style:normal;color:#fff}
-.disclose{font-size:11.5px;color:var(--slate);margin:16px 0 0;letter-spacing:.03em}
+.disclose{font-size:12.5px;color:var(--slate);margin:22px 0 0;letter-spacing:.03em}
 
 /* ─────────────────────────────────────────────
    크레딧
@@ -555,53 +567,77 @@ footer{
 }
 .credits{max-width:760px;margin:0 auto;display:grid;gap:40px}
 
+/* ── 원 기사 카드 ── */
 .src-card{
-  display:block;position:relative;overflow:hidden;
-  padding:clamp(26px,4vw,38px);
-  border:1px solid rgba(169,188,199,.22);
-  background:linear-gradient(135deg,rgba(143,186,212,.07),rgba(4,7,10,0) 62%);
-  text-decoration:none;border-bottom:1px solid rgba(169,188,199,.22);
-  transition:border-color .35s,background .35s,transform .35s;
+  display:grid;grid-template-columns:minmax(0,34%) 1fr;align-items:stretch;
+  text-decoration:none;overflow:hidden;
+  border:1px solid rgba(169,188,199,.16);
+  background:rgba(255,255,255,.012);
+  transition:border-color .4s,background .4s;
 }
-.src-card::after{
-  content:"";position:absolute;inset:auto 0 0 0;height:1px;
-  background:var(--frost);transform:scaleX(0);transform-origin:0 50%;
-  transition:transform .5s cubic-bezier(.16,1,.3,1);
+.src-card:hover{border-color:rgba(143,186,212,.42);background:rgba(143,186,212,.05)}
+
+.src-thumb{position:relative;overflow:hidden;min-height:150px;background:#04070A}
+.src-thumb img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(.35) brightness(.44) contrast(1.05);
+  transform:scale(1.04);
+  transition:filter .6s,transform .8s cubic-bezier(.16,1,.3,1);
 }
-.src-card:hover{
-  border-color:rgba(143,186,212,.5);
-  background:linear-gradient(135deg,rgba(143,186,212,.13),rgba(4,7,10,0) 62%);
-  transform:translateY(-2px);
+.src-thumb::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(4,7,10,.25),rgba(4,7,10,.85));
 }
-.src-card:hover::after{transform:scaleX(1)}
-.src-kick{
-  display:block;font-size:11px;letter-spacing:.2em;color:var(--frost);
-  font-weight:600;margin:0 0 16px;
+.src-card:hover .src-thumb img{filter:grayscale(.1) brightness(.62) contrast(1.05);transform:scale(1.09)}
+
+.src-body{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(24px,3.4vw,38px);gap:clamp(18px,2.4vw,26px);
 }
 .src-title{
   display:block;font-family:var(--serif);font-weight:400;
-  font-size:clamp(19px,2.4vw,27px);line-height:1.52;color:#fff;
+  font-size:clamp(18px,2.2vw,26px);line-height:1.55;color:#fff;
   letter-spacing:-.01em;word-break:keep-all;
 }
-.src-go{
-  display:inline-flex;align-items:center;gap:10px;margin:24px 0 0;
-  font-size:12.5px;letter-spacing:.08em;color:var(--slate-lt);font-weight:500;
+.src-go{display:inline-flex;align-items:center;gap:12px}
+.src-go b{
+  font-size:clamp(12.5px,1.3vw,14px);letter-spacing:.1em;
+  color:var(--frost);font-weight:600;
 }
 .src-go i{
-  display:block;width:26px;height:1px;background:currentColor;position:relative;
-  transition:width .35s;
+  display:block;width:30px;height:1px;background:var(--frost);position:relative;
+  transition:width .4s cubic-bezier(.16,1,.3,1);
 }
 .src-go i::after{
-  content:"";position:absolute;right:0;top:-3px;
-  width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;
+  content:"";position:absolute;right:0;top:-3.5px;
+  width:8px;height:8px;border-top:1px solid var(--frost);border-right:1px solid var(--frost);
   transform:rotate(45deg);
 }
-.src-card:hover .src-go{color:var(--frost)}
-.src-card:hover .src-go i{width:38px}
+.src-card:hover .src-go i{width:46px}
+@media (max-width:640px){
+  .src-card{grid-template-columns:1fr}
+  .src-thumb{min-height:128px}
+  .src-thumb::after{background:linear-gradient(180deg,rgba(4,7,10,.2),rgba(4,7,10,.8))}
+}
+
+/* ── 이미지 고지 ── */
+.imgnote{
+  padding-top:clamp(30px,4vw,44px);
+  border-top:1px solid rgba(169,188,199,.14);
+  display:grid;grid-template-columns:minmax(0,34%) 1fr;
+  gap:clamp(20px,3.4vw,38px);align-items:start;
+}
+.imgnote h2{
+  font-size:11.5px;letter-spacing:.18em;color:var(--slate);
+  margin:0;font-weight:600;padding-top:3px;
+}
+.imgnote p{
+  margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);
+  font-weight:350;word-break:keep-all;max-width:52ch;
+}
+@media (max-width:640px){ .imgnote{grid-template-columns:1fr;gap:14px} }
 .credits h2{font-size:13px;letter-spacing:.14em;color:var(--slate);margin:0;font-weight:500}
 .credits p{margin:0;font-size:14px;line-height:1.95;color:var(--slate-lt);font-weight:350}
-.credits p.notice{color:var(--chalk);border-left:2px solid var(--frost);padding-left:18px}
-.credits p.notice b{font-weight:600;color:#fff}
 .credits a{color:var(--frost);text-decoration:none;border-bottom:1px solid rgba(143,186,212,.35)}
 .credits a:hover{border-bottom-color:var(--frost)}
 .srcs{display:grid;gap:9px;font-size:13px;line-height:1.8;color:var(--slate)}
@@ -678,8 +714,8 @@ footer{
       <div class="costbar" id="costbar">
         <div class="cb-track" data-cb="0.05,0.12"><i class="cb-a"></i><i class="cb-b"></i></div>
         <div class="cb-legend">
-          <b class="a"><em></em>안정화·냉동 처리 6만</b>
-          <b class="b"><em></em>무기한 보관 15만 (AUD)</b>
+          <b class="a"><em></em><i>안정화·냉동 처리</i>약 5,800만원</b>
+          <b class="b"><em></em><i>무기한 보관</i>약 1억 4,400만원</b>
         </div>
       </div>
       <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러. 연회비 350호주달러는 별도다.</p>
@@ -1019,15 +1055,18 @@ footer{
 
 <footer>
   <div class="credits">
-    <div>
-      <h2>이미지에 대하여</h2>
-      <p class="notice">화면에 쓰인 이미지는 전부 기사 내용을 바탕으로 <b>생성형 AI로 제작한 재현 이미지</b>입니다. 서던 크라이오닉스를 비롯한 특정 기관의 시설이나 실존 인물의 사진이 아니며, 보존자나 그 유족과도 무관합니다.</p>
-    </div>
     <a class="src-card" href="https://view.asiae.co.kr/article/2026091408461986576" target="_blank" rel="noopener">
-      <span class="src-kick">원 기사</span>
-      <span class="src-title">2억 내고 ‘250년 뒤에 깨워줘’<br>…대기자만 4000명 몰린 ‘냉동인간’</span>
-      <span class="src-go">기사 전문 보기<i></i></span>
+      <span class="src-thumb"><img src="./00-cover.png" alt="" aria-hidden="true" loading="lazy"></span>
+      <span class="src-body">
+        <span class="src-title">2억 내고 ‘250년 뒤에 깨워줘’<br>…대기자만 4000명 몰린 ‘냉동인간’</span>
+        <span class="src-go"><b>기사 전문 보기</b><i></i></span>
+      </span>
     </a>
+
+    <div class="imgnote">
+      <h2>이미지에 대하여</h2>
+      <p>화면에 쓰인 이미지는 전부 기사 내용을 바탕으로 생성형 AI로 제작한 재현 이미지입니다. 서던 크라이오닉스를 비롯한 특정 기관의 시설이나 실존 인물의 사진이 아니며, 보존자나 그 유족과도 무관합니다.</p>
+    </div>
   </div>
 </footer>
 
@@ -1228,6 +1267,38 @@ footer{
     vg.addColorStop(0,"rgba(4,7,10,0)");
     vg.addColorStop(1,"rgba(4,7,10,.85)");
     wctx.fillStyle=vg; wctx.fillRect(0,0,w,h);
+  }
+
+  /* ── 800명 점 분포 ── */
+  var dotsBox = document.getElementById("dots"), dotOrder = [], krEls = [];
+  if(dotsBox){
+    var frag = document.createDocumentFragment();
+    var krSet = {648:1, 702:2, 761:3};            /* 한국 3명 — 러시아 시설 보관 */
+    for(var d=0; d<800; d++){
+      var el = document.createElement("i");
+      el._cls = krSet[d] ? "kr" : (d < 600 ? "us" : "ru");
+      if(krSet[d]){ el.style.animationDelay = (krSet[d]-1)*1.1 + "s"; krEls.push(el); }
+      else dotOrder.push(el);                     /* 나머지 797개를 먼저 채운다 */
+      frag.appendChild(el);
+    }
+    dotsBox.appendChild(frag);
+    dotOrder = dotOrder.concat(krEls);            /* 한국 3명은 맨 끝에 하나씩 */
+    dotsBox.setAttribute("aria-label","전 세계 냉동보존자 약 800명. 미국 600명, 러시아 200명, 한국인 3명 포함.");
+  }
+  var dotsLit = -1;
+  function paintDots(t){
+    t = clamp(t,0,1);
+    var n;
+    if(t < 0.80){ n = Math.round((t/0.80)*797); }
+    else {
+      var k = (t-0.80)/0.20;                      /* 마지막 20% 구간에 3개를 나눠서 */
+      n = 797 + Math.min(3, Math.floor(k*3.4));
+    }
+    if(n > 800) n = 800;
+    if(n === dotsLit) return;
+    if(n > dotsLit){ for(var i=Math.max(dotsLit,0); i<n; i++) dotOrder[i].className = dotOrder[i]._cls; }
+    else { for(var j=dotsLit; j>=n; j--) if(dotOrder[j]) dotOrder[j].className = ""; }
+    dotsLit = n;
   }
 
   /* ── 비용 막대 ── */
@@ -1470,7 +1541,7 @@ footer{
       }
 
       if(act.id==="numbers"){
-        paintDots(ease(norm(p,.46,.72)));
+        paintDots(ease(norm(p,.46,.71)));
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
       }
       if(act.id==="perfusion" && perfuse){
