@@ -139,12 +139,12 @@ img{display:block;max-width:100%}
 }
 .fig small{font-size:.32em;font-weight:500;letter-spacing:-.02em;margin-left:.12em}
 .figcap{
-  font-size:clamp(13px,1.3vw,16px);color:#DCE6EC;
-  margin:26px 0 0;line-height:1.8;font-weight:400;
+  font-size:clamp(15px,1.5vw,19px);color:#E4EDF2;
+  margin:28px 0 0;line-height:1.75;font-weight:400;
   max-width:38ch;margin-left:auto;margin-right:auto;text-wrap:balance;
   text-shadow:0 1px 14px rgba(4,7,10,.95),0 0 30px rgba(4,7,10,.8);
 }
-.figsub{font-size:clamp(11px,1.05vw,13px);color:var(--slate-lt);margin:12px auto 0;line-height:1.75;max-width:40ch;text-wrap:balance;opacity:.95;text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 26px rgba(4,7,10,.85)}
+.figsub{font-size:clamp(12.5px,1.2vw,15px);color:var(--slate-lt);margin:14px auto 0;line-height:1.8;max-width:38ch;text-wrap:balance;opacity:.95;text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 26px rgba(4,7,10,.85)}
 
 /* ─────────────────────────────────────────────
    cover
@@ -188,32 +188,24 @@ img{display:block;max-width:100%}
 .disclaimer{
   position:absolute;right:var(--gut);left:auto;
   bottom:clamp(16px,2.6vh,26px);z-index:7;
-  max-width:min(46ch,74vw);
-  font-size:clamp(10.5px,1vw,12px);line-height:1.62;letter-spacing:.01em;
-  color:#C3D2DB;font-weight:500;text-align:right;pointer-events:none;
-  padding:9px 13px;
-  background:rgba(4,7,10,.42);
-  border:1px solid rgba(169,188,199,.16);
-  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
-  text-shadow:0 1px 10px rgba(4,7,10,.96);
+  font-size:clamp(10.5px,.95vw,11.5px);letter-spacing:.02em;line-height:1.5;
+  color:rgba(190,206,215,.78);font-weight:400;text-align:right;
+  white-space:nowrap;pointer-events:none;word-break:keep-all;
+  text-shadow:0 1px 12px rgba(4,7,10,1),0 0 24px rgba(4,7,10,.95);
 }
-.disclaimer b{
-  font-weight:600;color:var(--frost);letter-spacing:.1em;
-  margin-right:8px;white-space:nowrap;
-}
+.disclaimer b{font-weight:600;color:rgba(143,186,212,.85);margin-right:7px}
 @media (max-width:720px){
   .disclaimer{
-    left:var(--gut);right:var(--gut);max-width:none;
-    text-align:center;font-size:10.5px;bottom:12px;padding:8px 10px;
+    left:var(--gut);right:var(--gut);text-align:center;
+    white-space:normal;font-size:10px;bottom:12px;
   }
-  .disclaimer b{display:block;margin:0 0 4px}
   .cue{bottom:clamp(60px,9vh,84px)}
 }
 
 /* ─────────────────────────────────────────────
    심박 / ECG
    ───────────────────────────────────────────── */
-#ecg{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:220px;z-index:2;opacity:.85}
+#ecg{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:.9}
 
 /* ─────────────────────────────────────────────
    8시간 게이지
@@ -310,9 +302,20 @@ img{display:block;max-width:100%}
 .dots i.us{background:#E8EEF2}                       /* 미국 — 흰빛 */
 .dots i.ru{background:#4E6E86}                       /* 러시아 — 짙은 회청 */
 .dots i.kr{
-  background:#fff;transform:scale(2.1);z-index:3;
-  box-shadow:0 0 0 2.5px rgba(4,7,10,.92),0 0 16px 4px rgba(255,255,255,.95);
+  background:#fff;transform:scale(1.3);z-index:3;
+  animation:firefly 4s ease-in-out infinite;
 }
+@keyframes firefly{
+  0%,100%{
+    box-shadow:0 0 5px 1px rgba(226,240,250,.40),0 0 12px 3px rgba(143,186,212,.16);
+    opacity:.72;
+  }
+  50%{
+    box-shadow:0 0 13px 3px rgba(240,250,255,.95),0 0 30px 9px rgba(143,186,212,.42);
+    opacity:1;
+  }
+}
+.legend b.kr::before{animation:firefly 4s ease-in-out infinite}
 .legend{
   display:flex;gap:20px;justify-content:center;margin:20px 0 0;
   font-size:12px;letter-spacing:.06em;color:#BCCBD4;font-weight:500;
@@ -321,7 +324,7 @@ img{display:block;max-width:100%}
 .legend b{font-weight:500;display:inline-flex;align-items:center;gap:7px}
 .legend b::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .legend b.us{color:#E8EEF2}.legend b.ru{color:#6E90A8}.legend b.kr{color:#fff}
-.legend b.kr::before{box-shadow:0 0 10px rgba(255,255,255,.9)}
+
 
 /* ─────────────────────────────────────────────
    10% 확률 그리드
@@ -470,7 +473,7 @@ footer{
     </div>
 
     <div class="cue"><i></i><span>SCROLL</span></div>
-    <p class="disclaimer"><b>재현 이미지</b>취재 내용을 바탕으로 제작했습니다. 실제 촬영한 사진이 아닙니다.</p>
+    <p class="disclaimer"><b>재현 이미지</b>취재 내용을 바탕으로 제작했으며 실제 사진이 아닙니다.</p>
   </div>
 </section>
 
@@ -511,7 +514,7 @@ footer{
 </section>
 
 <!-- ═══════════ 02 · 법적 사망 ═══════════ -->
-<section class="act" id="death" style="height:420vh">
+<section class="act" id="death" style="height:620vh">
   <div class="stage">
     <div class="plate">
       <img src="./01-facility.png" alt="" data-k="1.12,1.2" data-b="0.55,0.12" loading="lazy" aria-hidden="true">
@@ -519,18 +522,18 @@ footer{
     <div class="scrim full"></div>
     <canvas id="ecg"></canvas>
 
-    <div class="beat lower" data-band="0.04,0.26">
+    <div class="beat lower" data-band="0.03,0.18">
       <p class="kicker">시작점</p>
       <p class="line">냉동보존은 죽은 뒤에 시작된다.</p>
       <p class="note">법적 사망 선고가 나기 전에는 아무것도 할 수 없다. 살아 있는 사람에게 하면 살인이다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.34,0.56">
+    <div class="beat centre" data-band="0.24,0.42">
       <p class="line" style="color:#fff">심장이 멈춘다.</p>
       <p class="note">선고가 나오는 즉시 얼음주머니 등으로 몸을 식히기 시작한다. 체온을 떨어뜨려 시간을 버는 것이 첫 번째 일이다.</p>
     </div>
 
-    <div class="beat lower" data-band="0.64,0.94">
+    <div class="beat lower" data-band="0.64,0.96">
       <p class="kicker">냉각</p>
       <p class="line">여기서부터는 분 단위 싸움이다.</p>
       <p class="note">체온이 높을수록 뇌는 빨리 무너진다. 처치가 늦을수록 되살릴 대상 자체가 줄어든다. 그래서 이송 내내 체온을 내린다.</p>
@@ -638,7 +641,7 @@ footer{
       <img src="./05-inverted.jpg" alt="액체질소 듀어 단면. 인체가 머리를 아래로 향한 채 보관돼 있다" data-k="1.1,1.0" data-rot="0.10,0.52" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
-    <p class="disclaimer"><b>재현 이미지</b>보존 방식을 설명하기 위한 단면도입니다. 실제 시설 도면이 아닙니다.</p>
+    <p class="disclaimer"><b>재현 이미지</b>보존 방식을 설명하기 위한 단면도입니다.</p>
 
     <div class="beat lower" data-band="0.02,0.22">
       <p class="kicker">보관</p>
@@ -711,10 +714,9 @@ footer{
 
     <div class="beat centre" data-band="0.36,0.98">
       <p class="kicker" style="text-align:center">시설 회장이 말한 숫자</p>
-      <div class="odds-grid" id="oddsGrid"></div>
-      <p class="fig" style="font-size:clamp(44px,7vw,92px);margin-top:30px">10<small>%</small></p>
-      <p class="note" style="text-align:center">250년 뒤 되살아날 가능성이다. 다만 그는 이것이 과학적 수치가 아니라 회사 측 전망일 뿐이라고 선을 그었다.</p>
-      <button class="odds-btn" id="oddsBtn" type="button">다시 돌려보기</button>
+      <p class="fig">10<small>%</small></p>
+      <p class="figcap">250년 뒤 되살아날 가능성</p>
+      <p class="figsub">다만 그는 이것이 과학적 수치가 아니라 회사 측 전망일 뿐이라고 선을 그었다.</p>
     </div>
   </div>
 </section>
@@ -899,28 +901,43 @@ footer{
 
   /* ── ECG ───────────────────────────────── */
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
+
+  /* 하트 외곽선 한 점 */
+  function heartPt(t, cx, cy, R){
+    var x = 16*Math.pow(Math.sin(t),3);
+    var y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+    return [cx + x*R/16.5, cy - y*R/16.5];
+  }
+
   function drawECG(p){
     if(!ectx) return;
     var w = ecg.width, h = ecg.height, dpr = window._dpr||1;
     ectx.clearRect(0,0,w,h);
-    var mid = h/2;
-    /* p<0.42 : 박동 → 0.42~0.56 : 마지막 박동 → 이후 : 평탄 */
-    var alive = clamp(1-norm(p,.34,.52),0,1);
-    var pad   = w*0.055;                 /* 양끝이 화면에 붙어 잘려 보이지 않게 */
-    var span  = w - pad*2;
-    var sweep = clamp(norm(p,.02,.92),0,1);
-    var end   = pad + span*sweep;
+    var mid = h*0.5, cx = w*0.5;
 
-    ectx.lineWidth = 1.4*dpr;
-    ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.30+0.62*alive)+")" : "rgba(169,188,199,0.34)";
+    var pad   = w*0.055;
+    var span  = w - pad*2;
+    var sweep = clamp(norm(p,.02,.40),0,1);
+    var end   = pad + span*sweep;
+    var alive = clamp(1-norm(p,.24,.40),0,1);
+
+    /* 심박이 하트로 넘어가는 구간 */
+    var hT    = ease(clamp(norm(p,.50,.90),0,1));
+    var fade  = 1 - clamp(norm(p,.46,.64),0,1)*0.78;
+
+    /* ── 파형 ── */
+    ectx.globalAlpha = fade;
+    ectx.lineWidth = 1.5*dpr;
+    ectx.lineCap = "round";
+    ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.34+0.60*alive)+")" : "rgba(169,188,199,0.42)";
     ectx.beginPath();
-    var period = 120*dpr;
+    var period = 130*dpr;
     for(var x=pad; x<=end; x+=1.5*dpr){
       var y = mid;
-      var localAlive = clamp(1 - norm((x-pad)/span,.34,.52),0,1);
-      if(localAlive>.02){
+      var la = clamp(1 - norm((x-pad)/span,.30,.50),0,1);
+      if(la>.02){
         var t = (x % period)/period;
-        var amp = 46*dpr*localAlive;
+        var amp = 50*dpr*la;
         if(t>.30&&t<.34) y = mid - amp*0.16*Math.sin((t-.30)/.04*Math.PI);
         else if(t>=.36&&t<.40) y = mid + amp*0.22;
         else if(t>=.40&&t<.44) y = mid - amp;
@@ -930,10 +947,38 @@ footer{
       if(x<=pad) ectx.moveTo(x,y); else ectx.lineTo(x,y);
     }
     ectx.stroke();
+    ectx.globalAlpha = 1;
 
-    if(end>pad+2){
+    /* ── 파형 끝이 하트 윤곽으로 이어진다 ── */
+    if(hT > 0.001){
+      var R = Math.min(w*0.42, h*0.40);
+      var steps = 260, upto = Math.floor(steps*hT);
+      ectx.lineWidth = 1.4*dpr;
+      ectx.strokeStyle = "rgba(196,214,224,"+(0.32+0.50*hT).toFixed(3)+")";
+      ectx.shadowColor = "rgba(143,186,212,.55)";
+      ectx.shadowBlur = 16*dpr;
+      ectx.beginPath();
+      for(var i=0;i<=upto;i++){
+        var pt = heartPt(Math.PI + (i/steps)*Math.PI*2, cx, mid, R);
+        if(i===0) ectx.moveTo(pt[0],pt[1]); else ectx.lineTo(pt[0],pt[1]);
+      }
+      ectx.stroke();
+      ectx.shadowBlur = 0;
+
+      /* 그려지는 끝점 */
+      if(hT < 0.995){
+        var tip = heartPt(Math.PI + hT*Math.PI*2, cx, mid, R);
+        ectx.fillStyle = "rgba(232,242,248,.95)";
+        ectx.beginPath(); ectx.arc(tip[0],tip[1],2.6*dpr,0,6.2832); ectx.fill();
+      }
+    }
+
+    /* 파형 진행점 */
+    if(end>pad+2 && hT < 0.02){
+      ectx.globalAlpha = fade;
       ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,238,242,.9)";
-      ectx.beginPath(); ectx.arc(end,mid,2.6*dpr,0,6.2832); ectx.fill();
+      ectx.beginPath(); ectx.arc(end,mid,2.8*dpr,0,6.2832); ectx.fill();
+      ectx.globalAlpha = 1;
     }
   }
 
@@ -968,10 +1013,11 @@ footer{
   var dotsBox = document.getElementById("dots"), dotEls = [];
   if(dotsBox){
     var frag = document.createDocumentFragment();
-    var krSet = {648:1, 702:1, 761:1};      /* 한국 3명 — 러시아 시설 보관 */
+    var krSet = {648:1, 702:2, 761:3};      /* 한국 3명 — 러시아 시설 보관 */
     for(var d=0; d<800; d++){
       var el = document.createElement("i");
       el._cls = krSet[d] ? "kr" : (d < 600 ? "us" : "ru");
+      if(krSet[d]) el.style.animationDelay = (krSet[d]-1)*1.35 + "s";
       frag.appendChild(el); dotEls.push(el);
     }
     dotsBox.appendChild(frag);
@@ -986,21 +1032,6 @@ footer{
     dotsLit = n;
   }
 
-  /* ── 10% 확률 그리드 ─────────────────── */
-  var oddsGrid = document.getElementById("oddsGrid"), oddsEls = [];
-  if(oddsGrid){
-    for(var c2=0;c2<100;c2++){ var o2=document.createElement("i"); oddsGrid.appendChild(o2); oddsEls.push(o2); }
-    oddsGrid.setAttribute("aria-label","100칸 중 10칸이 켜진 격자. 10퍼센트를 나타낸다.");
-  }
-  function rollOdds(){
-    if(!oddsEls.length) return;
-    var pick = {}, got = 0;
-    while(got < 10){ var r2 = Math.floor(Math.random()*100); if(!pick[r2]){ pick[r2]=1; got++; } }
-    for(var k2=0;k2<100;k2++) oddsEls[k2].classList.toggle("on", !!pick[k2]);
-  }
-  var oddsBtn = document.getElementById("oddsBtn");
-  if(oddsBtn) oddsBtn.addEventListener("click", rollOdds);
-  var oddsSeeded = false;
 
   var msEls = document.querySelectorAll("#ms b");
 
@@ -1094,7 +1125,6 @@ footer{
 
       if(act.id==="numbers") paintDots(ease(norm(p,.42,.74)));
       if(act.id==="ice" && p>0.66 && !cmpNudged) nudgeCompare();
-      if(act.id==="odds" && !oddsSeeded && p>0.3){ oddsSeeded = true; rollOdds(); }
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
