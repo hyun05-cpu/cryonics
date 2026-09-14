@@ -79,6 +79,7 @@ img{display:block;max-width:100%}
 .scrim{position:absolute;inset:0;pointer-events:none}
 .scrim.bottom{background:linear-gradient(to top,rgba(4,7,10,.92) 0%,rgba(4,7,10,.55) 26%,rgba(4,7,10,0) 58%)}
 .scrim.full{background:radial-gradient(120% 90% at 50% 45%,rgba(4,7,10,0) 0%,rgba(4,7,10,.55) 62%,rgba(4,7,10,.92) 100%)}
+#numbers .scrim.full{background:radial-gradient(90% 70% at 50% 50%,rgba(4,7,10,.62) 0%,rgba(4,7,10,.52) 45%,rgba(4,7,10,.82) 100%)}
 .scrim.dim{background:#04070A;opacity:0;z-index:6}
 
 /* ─────────────────────────────────────────────
@@ -127,14 +128,16 @@ img{display:block;max-width:100%}
   font-size:clamp(58px,13vw,168px);line-height:.94;
   font-weight:700;letter-spacing:-.045em;color:#fff;
   font-variant-numeric:tabular-nums;margin:0;
+  text-shadow:0 2px 40px rgba(4,7,10,.7);
 }
 .fig small{font-size:.32em;font-weight:500;letter-spacing:-.02em;margin-left:.12em}
 .figcap{
-  font-size:clamp(13px,1.3vw,16px);color:var(--slate-lt);
-  margin:22px 0 0;line-height:1.8;font-weight:350;
-  max-width:26ch;margin-left:auto;margin-right:auto;text-wrap:pretty;
+  font-size:clamp(13px,1.3vw,16px);color:#DCE6EC;
+  margin:26px 0 0;line-height:1.8;font-weight:400;
+  max-width:38ch;margin-left:auto;margin-right:auto;text-wrap:balance;
+  text-shadow:0 1px 14px rgba(4,7,10,.95),0 0 30px rgba(4,7,10,.8);
 }
-.figsub{font-size:clamp(11px,1.05vw,13px);color:var(--slate);margin:10px auto 0;line-height:1.75;max-width:30ch;text-wrap:pretty}
+.figsub{font-size:clamp(11px,1.05vw,13px);color:var(--slate-lt);margin:12px auto 0;line-height:1.75;max-width:40ch;text-wrap:balance;opacity:.82;text-shadow:0 1px 12px rgba(4,7,10,.95)}
 
 /* ─────────────────────────────────────────────
    cover
@@ -172,15 +175,36 @@ img{display:block;max-width:100%}
 @keyframes drop{0%,100%{transform:scaleY(.35);transform-origin:top;opacity:.4}50%{transform:scaleY(1);transform-origin:top;opacity:1}}
 
 /* ─────────────────────────────────────────────
+   이미지 고지
+   ───────────────────────────────────────────── */
+.disclaimer{
+  position:absolute;left:var(--gut);right:var(--gut);
+  bottom:clamp(14px,2.4vh,22px);z-index:7;
+  font-size:clamp(10px,.95vw,11.5px);letter-spacing:.02em;line-height:1.65;
+  color:var(--slate);opacity:.62;text-align:center;pointer-events:none;
+  text-shadow:0 1px 10px rgba(4,7,10,.95);
+}
+.disclaimer.side{text-align:left;max-width:42ch;right:auto}
+@media (max-width:720px){ .disclaimer{font-size:10px;bottom:12px} }
+
+/* ─────────────────────────────────────────────
    심박 / ECG
    ───────────────────────────────────────────── */
-#ecg{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:200px;z-index:2;opacity:.9}
+#ecg{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:220px;z-index:2;opacity:.85}
 
 /* ─────────────────────────────────────────────
    8시간 게이지
    ───────────────────────────────────────────── */
 .gauge{margin:26px 0 0;max-width:420px}
-.gauge .bar{height:2px;background:rgba(110,132,146,.26);position:relative;overflow:hidden}
+.gauge .bar{height:2px;background:rgba(110,132,146,.26);position:relative}
+.gauge.live{cursor:ew-resize;touch-action:pan-y}
+.gauge.live .bar{height:3px}
+.gauge.live .bar::after{
+  content:"";position:absolute;top:50%;left:var(--g,0%);
+  width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;
+  border:1px solid rgba(232,238,242,.65);background:rgba(4,7,10,.55);
+}
+.gauge .hint{font-size:11px;color:var(--slate);margin:14px 0 0;letter-spacing:.04em}
 .gauge .bar>i{position:absolute;inset:0 auto 0 0;width:0;background:var(--frost)}
 .gauge .row{display:flex;justify-content:space-between;margin-top:11px;font-size:12px;color:var(--slate);font-variant-numeric:tabular-nums;letter-spacing:.06em}
 .beat.centre .gauge{margin-left:auto;margin-right:auto}
@@ -218,12 +242,57 @@ img{display:block;max-width:100%}
   backdrop-filter:blur(3px);
 }
 .compare .tag{
-  position:absolute;bottom:14px;font-size:11px;letter-spacing:.12em;
-  color:#fff;background:rgba(4,7,10,.62);padding:6px 11px;
+  position:absolute;bottom:16px;font-size:11px;letter-spacing:.14em;
+  color:#fff;background:none;padding:0;
+  text-shadow:0 1px 10px rgba(4,7,10,.95),0 0 22px rgba(4,7,10,.9);
 }
-.compare .tag.l{left:14px}
-.compare .tag.r{right:14px}
+.compare .tag.l{left:16px}
+.compare .tag.r{right:16px}
 .cmp-hint{font-size:12px;color:var(--slate);margin:18px 0 0;text-align:center;letter-spacing:.04em}
+
+/* ─────────────────────────────────────────────
+   800명 점 분포
+   ───────────────────────────────────────────── */
+.dots{
+  display:grid;grid-template-columns:repeat(40,1fr);gap:3px;
+  width:min(76vw,460px);margin:26px auto 0;
+}
+.dots i{
+  display:block;aspect-ratio:1/1;border-radius:50%;
+  background:rgba(110,132,146,.16);transition:background .25s,box-shadow .25s;
+}
+.dots i.us{background:rgba(169,188,199,.85)}
+.dots i.ru{background:rgba(120,150,172,.85)}
+.dots i.kr{background:#fff;box-shadow:0 0 9px rgba(255,255,255,.9)}
+.legend{
+  display:flex;gap:18px;justify-content:center;margin:16px 0 0;
+  font-size:11px;letter-spacing:.06em;color:var(--slate);
+}
+.legend b{font-weight:400;display:inline-flex;align-items:center;gap:6px}
+.legend b::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.legend b.us{color:#A9BCC7}.legend b.ru{color:#7896AC}.legend b.kr{color:#fff}
+
+/* ─────────────────────────────────────────────
+   10% 확률 그리드
+   ───────────────────────────────────────────── */
+.odds-grid{
+  display:grid;grid-template-columns:repeat(10,1fr);gap:6px;
+  width:min(64vw,300px);margin:0 auto;
+}
+.odds-grid i{
+  display:block;aspect-ratio:1/1;
+  border:1px solid rgba(110,132,146,.3);
+  transition:background .4s,border-color .4s,box-shadow .4s;
+}
+.odds-grid i.on{background:var(--frost);border-color:var(--frost);box-shadow:0 0 12px rgba(143,186,212,.55)}
+.odds-btn{
+  margin:30px auto 0;display:block;
+  font-family:var(--sans);font-size:13px;font-weight:500;color:var(--chalk);
+  background:transparent;border:1px solid rgba(169,188,199,.34);
+  padding:12px 28px;cursor:pointer;letter-spacing:.04em;
+  transition:background .25s,border-color .25s;
+}
+.odds-btn:hover{background:rgba(143,186,212,.10);border-color:var(--frost)}
 
 /* ─────────────────────────────────────────────
    서리 오버레이
@@ -290,6 +359,8 @@ footer{
 .credits{max-width:760px;margin:0 auto;display:grid;gap:30px}
 .credits h2{font-size:13px;letter-spacing:.14em;color:var(--slate);margin:0;font-weight:500}
 .credits p{margin:0;font-size:14px;line-height:1.95;color:var(--slate-lt);font-weight:350}
+.credits p.notice{color:var(--chalk);border-left:2px solid var(--frost);padding-left:18px}
+.credits p.notice b{font-weight:600;color:#fff}
 .credits a{color:var(--frost);text-decoration:none;border-bottom:1px solid rgba(143,186,212,.35)}
 .credits a:hover{border-bottom-color:var(--frost)}
 .srcs{display:grid;gap:9px;font-size:13px;line-height:1.8;color:var(--slate)}
@@ -349,6 +420,7 @@ footer{
     </div>
 
     <div class="cue"><i></i><span>스크롤</span></div>
+    <p class="disclaimer">이 화면의 이미지는 취재 내용을 바탕으로 제작한 재현 이미지입니다. 실제 사진이 아닙니다.</p>
   </div>
 </section>
 
@@ -363,7 +435,7 @@ footer{
     <div class="beat centre" data-band="0.02,0.20">
       <p class="fig"><span data-c="0,2,0.02,0.16,int">0</span><small>억원</small></p>
       <p class="figcap">전신 냉동보존 한 건에 드는 비용</p>
-      <p class="figsub">시신 이송과 영구 보관까지 포함한 금액. 대부분 생명보험 수익자를 보존기관으로 지정해 지불한다.</p>
+      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러. 사망 직후 안정화와 냉동 처리에 6만, 무기한 보관에 15만 호주달러가 든다. 연회비 350호주달러는 별도다.</p>
     </div>
 
     <div class="beat centre" data-band="0.26,0.44">
@@ -375,13 +447,15 @@ footer{
     <div class="beat centre" data-band="0.50,0.68">
       <p class="fig">약 <span data-c="0,800,0.50,0.64,comma">0</span><small>명</small></p>
       <p class="figcap">지금 이 순간 액체질소 안에 있는 사람</p>
-      <p class="figsub">기관별 집계로는 700명대, 업계 추정을 넓게 잡아도 1,000명 안쪽이다.</p>
+      <div class="dots" id="dots"></div>
+      <p class="legend"><b class="us">미국 600</b><b class="ru">러시아 200</b><b class="kr">한국</b></p>
+      <p class="figsub">미국에 600여 명, 러시아에 약 200명. 추산 범위는 800명에서 1,000명이다.</p>
     </div>
 
     <div class="beat centre" data-band="0.74,0.96">
       <p class="fig"><span data-c="0,3,0.74,0.86,int">0</span><small>명</small></p>
       <p class="figcap">한국에서 이 선택을 한 사람</p>
-      <p class="figsub">국내에는 보존 시설이 없다. 사망 후 해외 기관으로 이송된다.</p>
+      <p class="figsub">국내에는 보존 시설이 없다. 2020년 혈액암을 앓던 80대 여성, 2021년 담도암을 앓던 40대 여성 등이 해외로 옮겨졌다.</p>
     </div>
   </div>
 </section>
@@ -403,7 +477,7 @@ footer{
 
     <div class="beat centre" data-band="0.34,0.56">
       <p class="line" style="color:#fff">심장이 멈춘다.</p>
-      <p class="note">선고가 나오면 곧바로 시신을 얼음물로 옮기고, 멈춘 심폐 순환을 기계로 다시 돌린다. 뇌에 산소를 계속 보내기 위해서다.</p>
+      <p class="note">선고가 나오는 즉시 얼음주머니 등으로 몸을 식히기 시작한다. 체온을 떨어뜨려 시간을 버는 것이 첫 번째 일이다.</p>
     </div>
 
     <div class="beat lower" data-band="0.64,0.94">
@@ -425,16 +499,17 @@ footer{
     <div class="beat lower" data-band="0.04,0.24">
       <p class="kicker">1단계</p>
       <p class="line">피를 전부 빼낸다.</p>
-      <p class="note">혈액은 얼면 부피가 늘어 혈관을 터뜨린다. 가슴을 열어 큰 혈관에 관을 연결하고, 순환계 전체를 비운다.</p>
+      <p class="note">혈액을 그대로 두면 얼음이 된다. 큰 혈관에 관을 연결해 순환계를 비우고, 그 자리를 다른 물질로 채울 준비를 한다.</p>
     </div>
 
     <div class="beat lower" data-band="0.32,0.60">
       <p class="kicker">2단계</p>
       <p class="line">빈 혈관을 부동액으로 채운다.</p>
       <p class="note">농도를 한 번에 올리면 세포가 탈수로 망가진다. 옅은 농도부터 천천히 올린다. 이 단계에만 약 8시간이 걸린다.</p>
-      <div class="gauge">
+      <div class="gauge live" id="perf">
         <div class="bar"><i data-fill="0.32,0.60"></i></div>
         <div class="row"><span>00:00</span><span data-c="0,8,0.32,0.60,hour">00:00</span><span>08:00</span></div>
+        <p class="hint">끌어서 직접 돌려보기</p>
       </div>
     </div>
 
@@ -458,6 +533,7 @@ footer{
     <div class="scrim bottom"></div>
 
     <p class="readout" data-ro="0.10,0.98">배율 <b><span data-c="1,20000,0.12,0.92,mag">×1</span></b></p>
+    <p class="disclaimer">재현 이미지. 특정 인물이나 기관의 실제 사진이 아닙니다.</p>
 
     <div class="beat lower" data-band="0.04,0.30">
       <p class="line">이제 몸 안으로 들어간다.</p>
@@ -512,6 +588,7 @@ footer{
       <img src="./05-inverted.jpg" alt="액체질소 듀어 단면. 인체가 머리를 아래로 향한 채 보관돼 있다" data-k="1.1,1.0" data-rot="0.10,0.52" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
+    <p class="disclaimer">보존 방식을 설명하기 위해 제작한 재현 이미지입니다.</p>
 
     <div class="beat lower" data-band="0.02,0.22">
       <p class="kicker">보관</p>
@@ -524,8 +601,8 @@ footer{
     </div>
 
     <div class="beat lower" data-band="0.84,0.98">
-      <p class="line">지켜야 할 것은 몸이 아니라 뇌다.</p>
-      <p class="note">실제로 보존자 가운데 상당수는 머리만 남기는 방식을 택한다.</p>
+      <p class="line">계약서에는 이렇게 적혀 있다.</p>
+      <p class="note">현재의 보존 방식이 신체에 되돌릴 수 없는 물리적 손상을 일으킬 가능성이 높다. 시설 측이 직접 명시한 문장이다.</p>
     </div>
   </div>
 </section>
@@ -567,26 +644,51 @@ footer{
     </div>
 
     <div class="beat lower" data-band="0.90,1.0">
-      <p class="line">그 사이 기관이 먼저 사라질 수도 있다.</p>
-      <p class="note">250년간 버틸 조직을 보증할 방법은 없다. 실제로 문을 닫고 보존자를 다른 곳으로 옮긴 기관도 있었다.</p>
+      <p class="line">250년 뒤에 무엇이 남아 있을까.</p>
+      <p class="note">그때까지 존속할 기관도, 깨울 기술도 지금은 없다. 시설을 운영하는 사람들조차 이 점을 부정하지 않는다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 08b · 확률 ═══════════ -->
+<section class="act" id="odds" style="height:420vh">
+  <div class="stage">
+    <div class="scrim full"></div>
+
+    <div class="beat centre" data-band="0.04,0.28">
+      <p class="line">그렇다면 깨어날 확률은 얼마일까.</p>
+    </div>
+
+    <div class="beat centre" data-band="0.36,0.98">
+      <p class="kicker" style="text-align:center">시설 회장이 말한 숫자</p>
+      <div class="odds-grid" id="oddsGrid"></div>
+      <p class="fig" style="font-size:clamp(44px,7vw,92px);margin-top:30px">10<small>%</small></p>
+      <p class="note" style="text-align:center">250년 뒤 되살아날 가능성이다. 다만 그는 이것이 과학적 수치가 아니라 회사 측 전망일 뿐이라고 선을 그었다.</p>
+      <button class="odds-btn" id="oddsBtn" type="button">다시 돌려보기</button>
     </div>
   </div>
 </section>
 
 <!-- ═══════════ 09 · 진짜 문제 ═══════════ -->
-<section class="act" id="thaw" style="height:340vh">
+<section class="act" id="thaw" style="height:440vh">
   <div class="stage">
     <div class="plate">
       <img src="./06-brain.jpg" alt="" data-k="1.3,1.0" data-b="0.08,0.5" loading="lazy" aria-hidden="true">
     </div>
     <div class="scrim full"></div>
 
-    <div class="beat centre" data-band="0.10,0.46">
+    <div class="beat centre" data-band="0.06,0.32">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px)">문제는 얼리는 게 아니다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.54,0.94">
+    <div class="beat centre" data-band="0.40,0.64">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px);color:var(--frost)">다시 녹이는 것이다.</p>
+    </div>
+
+    <div class="beat lower" data-band="0.72,0.98">
+      <p class="kicker">과학계의 비유</p>
+      <p class="line">꽁꽁 언 딸기를 떠올려 보라.</p>
+      <p class="note">겉모습은 멀쩡하다. 그러나 녹이는 순간 속이 흐물흐물해지며 으깨진다. 얼 때 이미 세포막이 부서졌기 때문이다. 전문가들은 뇌도 같다고 말한다.</p>
     </div>
   </div>
 </section>
@@ -602,17 +704,17 @@ footer{
     <div class="beat lower" data-band="0.04,0.28">
       <p class="kicker">현재 기술</p>
       <p class="line">얼리는 기술은 있다.</p>
-      <p class="note">사람의 일부 조직과 장기는 유리화 상태로 보존했다가 되살린 사례가 있다.</p>
+      <p class="note">정자와 난자, 배아의 저온 보존은 이미 자리를 잡았고, 쥐의 신장을 유리화 상태로 보존하는 기술도 나왔다.</p>
     </div>
 
     <div class="beat lower" data-band="0.36,0.62">
       <p class="line">되살리는 기술은 없다.</p>
-      <p class="note">사람 전체를 냉동보존한 뒤 기억과 인격, 의식까지 되돌린 사례는 한 건도 없다. 이 온도에서 보존된 포유류를 되살린 적조차 없다.</p>
+      <p class="note">사람 전체를 얼렸다 녹이는 것은 현재 기술로 불가능하다는 것이 지배적인 견해다. 몸 바깥과 내부 장기가 서로 다른 속도로 식고, 고농도 냉동보호제 자체가 세포에 독성을 일으킨다.</p>
     </div>
 
     <div class="beat lower" data-band="0.70,0.96">
       <p class="line">그래서 이것은 치료가 아니라 베팅이다.</p>
-      <p class="note">미래 의학이 지금의 손상을 되돌릴 수 있다는 전제 위에, 2억원과 시신을 건다.</p>
+      <p class="note">가장 풀기 어려운 것은 뇌다. 냉동 과정에서 시냅스가 끊기거나 보존액이 고르게 퍼지지 않으면 기억과 인격이 통째로 사라진다.</p>
     </div>
   </div>
 </section>
@@ -642,8 +744,12 @@ footer{
 <footer>
   <div class="credits">
     <div>
+      <h2>이미지에 대하여</h2>
+      <p class="notice">화면에 쓰인 이미지는 전부 취재 내용을 바탕으로 <b>생성형 AI로 제작한 재현 이미지</b>입니다. 서던 크라이오닉스를 비롯한 특정 기관의 시설이나 실존 인물의 사진이 아니며, 보존자나 그 유족과도 무관합니다.</p>
+    </div>
+    <div>
       <h2>이 기사에 대하여</h2>
-      <p>아시아경제 기사 「2억 내고 ‘250년 뒤에 깨워줘’…대기자만 4000명 몰린 ‘냉동인간’」을 바탕으로 제작한 인터랙티브 비주얼뉴스입니다. 화면에 쓰인 이미지는 취재 내용을 바탕으로 제작한 재현 이미지이며, 특정 기관이나 인물의 실제 사진이 아닙니다.</p>
+      <p>아시아경제 기사 「2억 내고 ‘250년 뒤에 깨워줘’…대기자만 4000명 몰린 ‘냉동인간’」을 바탕으로 제작한 인터랙티브 비주얼뉴스입니다. 원 기사는 가디언 보도를 인용했습니다.</p>
     </div>
     <div>
       <h2>수치 기준</h2>
@@ -750,16 +856,18 @@ footer{
     var mid = h/2;
     /* p<0.42 : 박동 → 0.42~0.56 : 마지막 박동 → 이후 : 평탄 */
     var alive = clamp(1-norm(p,.34,.52),0,1);
+    var pad   = w*0.055;                 /* 양끝이 화면에 붙어 잘려 보이지 않게 */
+    var span  = w - pad*2;
     var sweep = clamp(norm(p,.02,.92),0,1);
-    var end   = w*sweep;
+    var end   = pad + span*sweep;
 
     ectx.lineWidth = 1.4*dpr;
     ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.30+0.62*alive)+")" : "rgba(169,188,199,0.34)";
     ectx.beginPath();
     var period = 120*dpr;
-    for(var x=0; x<=end; x+=1.5*dpr){
+    for(var x=pad; x<=end; x+=1.5*dpr){
       var y = mid;
-      var localAlive = clamp(1 - norm(x/w,.34,.52),0,1);
+      var localAlive = clamp(1 - norm((x-pad)/span,.34,.52),0,1);
       if(localAlive>.02){
         var t = (x % period)/period;
         var amp = 46*dpr*localAlive;
@@ -769,11 +877,11 @@ footer{
         else if(t>=.44&&t<.48) y = mid + amp*0.42;
         else if(t>=.52&&t<.60) y = mid - amp*0.20*Math.sin((t-.52)/.08*Math.PI);
       }
-      if(x===0) ectx.moveTo(x,y); else ectx.lineTo(x,y);
+      if(x<=pad) ectx.moveTo(x,y); else ectx.lineTo(x,y);
     }
     ectx.stroke();
 
-    if(end>2){
+    if(end>pad+2){
       ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,238,242,.9)";
       ectx.beginPath(); ectx.arc(end,mid,2.6*dpr,0,6.2832); ectx.fill();
     }
@@ -805,6 +913,44 @@ footer{
       wctx.beginPath(); wctx.moveTo(x0,y0); wctx.lineTo(x1,y1); wctx.stroke();
     }
   }
+
+  /* ── 800명 점 분포 ───────────────────── */
+  var dotsBox = document.getElementById("dots"), dotEls = [];
+  if(dotsBox){
+    var frag = document.createDocumentFragment();
+    var krSet = {214:1, 486:1, 705:1};      /* 한국 3명 자리 */
+    for(var d=0; d<800; d++){
+      var el = document.createElement("i");
+      el._cls = krSet[d] ? "kr" : (d < 600 ? "us" : "ru");
+      frag.appendChild(el); dotEls.push(el);
+    }
+    dotsBox.appendChild(frag);
+    dotsBox.setAttribute("aria-label","전 세계 냉동보존자 약 800명. 미국 600명, 러시아 200명, 한국인 포함.");
+  }
+  var dotsLit = -1;
+  function paintDots(t){
+    var n = Math.round(clamp(t,0,1)*800);
+    if(n === dotsLit) return;
+    if(n > dotsLit){ for(var i=Math.max(dotsLit,0); i<n; i++) dotEls[i].className = dotEls[i]._cls; }
+    else { for(var j=dotsLit; j>=n; j--) if(dotEls[j]) dotEls[j].className = ""; }
+    dotsLit = n;
+  }
+
+  /* ── 10% 확률 그리드 ─────────────────── */
+  var oddsGrid = document.getElementById("oddsGrid"), oddsEls = [];
+  if(oddsGrid){
+    for(var c2=0;c2<100;c2++){ var o2=document.createElement("i"); oddsGrid.appendChild(o2); oddsEls.push(o2); }
+    oddsGrid.setAttribute("aria-label","100칸 중 10칸이 켜진 격자. 10퍼센트를 나타낸다.");
+  }
+  function rollOdds(){
+    if(!oddsEls.length) return;
+    var pick = {}, got = 0;
+    while(got < 10){ var r2 = Math.floor(Math.random()*100); if(!pick[r2]){ pick[r2]=1; got++; } }
+    for(var k2=0;k2<100;k2++) oddsEls[k2].classList.toggle("on", !!pick[k2]);
+  }
+  var oddsBtn = document.getElementById("oddsBtn");
+  if(oddsBtn) oddsBtn.addEventListener("click", rollOdds);
+  var oddsSeeded = false;
 
   var msEls = document.querySelectorAll("#ms b");
 
@@ -872,12 +1018,15 @@ footer{
         var ct = act._cnts[c];
         var t2 = ease(norm(p, ct.a, ct.b));
         var val = ct.type==="mag" ? magCurve(t2) : lerp(ct.from, ct.to, t2);
+        if(held && perf.contains(ct.el)) continue;
         var s = fmt(ct.type, val);
         if(s !== ct.last){ ct.last = s; ct.el.textContent = s; }
       }
 
+      var held = perf && perf._held && perf._held();
       for(var f=0;f<act._fills.length;f++){
         var fl = act._fills[f];
+        if(held && perf.contains(fl.el)) continue;
         fl.el.style.width = (norm(p,fl.a,fl.b)*100).toFixed(2)+"%";
       }
       for(var q=0;q<act._ros.length;q++){
@@ -893,6 +1042,8 @@ footer{
         dm.el.style.opacity = lerp(dm.v0, dm.v1, norm(p,dm.a,dm.b)).toFixed(3);
       }
 
+      if(act.id==="numbers") paintDots(norm(p,.50,.66));
+      if(act.id==="odds" && !oddsSeeded && p>0.3){ oddsSeeded = true; rollOdds(); }
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
@@ -945,6 +1096,30 @@ footer{
     cmp.tabIndex = 0;
     cmp.setAttribute("role","slider");
     cmp.setAttribute("aria-label","얼음 결정과 유리화 비교");
+  }
+
+  /* ── 8시간 게이지 직접 조작 ────────────── */
+  var perf = document.getElementById("perf");
+  if(perf){
+    var fillEl = perf.querySelector(".bar > i");
+    var clockEl = perf.querySelector("[data-c]");
+    var perfDrag = false, perfHeld = false;
+    function setPerf(clientX){
+      var b = perf.querySelector(".bar").getBoundingClientRect();
+      var t = clamp((clientX-b.left)/b.width,0,1);
+      fillEl.style.width = (t*100).toFixed(2)+"%";
+      perf.style.setProperty("--g",(t*100).toFixed(2)+"%");
+      clockEl.textContent = fmt("hour", t*8);
+      perfHeld = true;                       /* 이후 스크롤이 덮어쓰지 않게 */
+    }
+    perf.addEventListener("pointerdown", function(e){
+      perfDrag = true; perf.setPointerCapture(e.pointerId); setPerf(e.clientX); e.preventDefault();
+    });
+    perf.addEventListener("pointermove", function(e){ if(perfDrag) setPerf(e.clientX); });
+    ["pointerup","pointercancel"].forEach(function(ev){
+      perf.addEventListener(ev, function(){ perfDrag = false; });
+    });
+    perf._held = function(){ return perfHeld; };
   }
 
   /* ── 마지막 질문 ───────────────────────── */
