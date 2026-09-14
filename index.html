@@ -306,32 +306,6 @@ img{display:block;max-width:100%}
 .cmp-hint.done{opacity:.35}
 
 /* ─────────────────────────────────────────────
-   혈관 관류
-   ───────────────────────────────────────────── */
-.perfuse{
-  position:absolute;inset:0;overflow:hidden;pointer-events:none;--pf:0%;
-  -webkit-mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 9%),rgba(0,0,0,.45) calc(var(--pf) - 2.5%),transparent var(--pf));
-  mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 9%),rgba(0,0,0,.45) calc(var(--pf) - 2.5%),transparent var(--pf));
-}
-/* 같은 혈관 이미지를 한랭색으로 착색해 겹친다 — 형태를 정확히 따라간다 */
-.pf-img{
-  width:100%;height:100%;object-fit:cover;object-position:var(--focal,50% 50%);
-  /* 혈색을 빼되 완전한 무채색이 되지는 않게 */
-  filter:saturate(.22) brightness(1.14) contrast(1.0);
-  opacity:.88;
-}
-.pf-sheen{
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(96deg,
-    rgba(226,244,252,0) 0px,
-    rgba(226,244,252,.10) 30px,
-    rgba(226,244,252,0) 82px);
-  mix-blend-mode:screen;filter:blur(9px);opacity:.75;
-  animation:flow 3.6s linear infinite;
-}
-@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(82px)} }
-
-/* ─────────────────────────────────────────────
    비용 분해 막대
    ───────────────────────────────────────────── */
 .costbar{width:min(80vw,520px);margin:30px auto 0}
@@ -836,10 +810,6 @@ footer{
   <div class="stage">
     <div class="plate">
       <img src="./03-vessel.png" alt="혈관 내부로 냉동보호제가 퍼져 나가는 메디컬 일러스트" data-k="1.16,1.0" style="--focal:42% 50%" loading="lazy">
-      <div class="perfuse" id="perfuse" data-pf="0.24,0.86">
-        <img class="pf-img" src="./03-vessel.png" alt="" aria-hidden="true" data-k="1.16,1.0" style="--focal:42% 50%">
-        <div class="pf-sheen"></div>
-      </div>
     </div>
     <div class="scrim bottom"></div>
 
@@ -1515,9 +1485,6 @@ footer{
   }
   if(wakeBtn) wakeBtn.addEventListener("click", runWake);
 
-  /* ── 혈관 관류 ── */
-  var perfuse = document.getElementById("perfuse"), pfA=0, pfB=1;
-  if(perfuse){ var pfd = perfuse.dataset.pf.split(",").map(Number); pfA=pfd[0]; pfB=pfd[1]; }
 
   /* ── 10% 도달 순간 ── */
   var oddsFig = document.querySelector("#odds .fig"), oddsHit = false;
@@ -1617,10 +1584,6 @@ footer{
       if(act.id==="numbers"){
         paintDots(ease(norm(p,.46,.71)));
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
-      }
-      if(act.id==="perfusion" && perfuse){
-        /* 78%에서 멈춘다 — 오른쪽 적혈구는 붉게 남겨 대비를 유지 */
-        perfuse.style.setProperty("--pf", (ease(norm(p,pfA,pfB))*78).toFixed(2)+"%");
       }
       if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
