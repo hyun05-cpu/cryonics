@@ -1,3 +1,6 @@
+
+
+Index · HTML
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,13 +13,13 @@
 <meta property="og:image" content="https://hyun05-cpu.github.io/cryonics/00-cover.png">
 <meta property="og:type" content="article">
 <meta name="theme-color" content="#04070A">
-
+ 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap">
 <link rel="preload" as="image" href="./00-cover.png">
-
+ 
 <style>
 /* ─────────────────────────────────────────────
    tokens
@@ -30,14 +33,14 @@
   --chalk:#E8EEF2;
   --frost:#8FBAD4;
   --pulse:#B8563A;            /* 체온. 2막에서 한 번만 쓰고 팔레트에서 사라진다 */
-
+ 
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --serif:"Noto Serif KR",serif;
-
+ 
   --gut:clamp(20px,5vw,64px);
   --measure:34ch;
 }
-
+ 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
@@ -51,13 +54,13 @@ body{
 img{display:block;max-width:100%}
 ::selection{background:rgba(143,186,212,.28)}
 :focus-visible{outline:2px solid var(--frost);outline-offset:3px}
-
+ 
 /* ─────────────────────────────────────────────
    scroll progress hairline
    ───────────────────────────────────────────── */
 #rail{position:fixed;inset:0 0 auto 0;height:2px;z-index:60;background:rgba(110,132,146,.16)}
 #rail>i{display:block;height:100%;width:0;background:var(--frost);transform-origin:0 50%}
-
+ 
 /* ─────────────────────────────────────────────
    act / stage
    ───────────────────────────────────────────── */
@@ -69,7 +72,7 @@ img{display:block;max-width:100%}
   display:grid;place-items:center;
   background:var(--ink);
 }
-
+ 
 /* photoreal plate */
 .plate{position:absolute;inset:0;overflow:hidden}
 .plate img{
@@ -80,7 +83,7 @@ img{display:block;max-width:100%}
 .scrim.bottom{background:linear-gradient(to top,rgba(4,7,10,.92) 0%,rgba(4,7,10,.55) 26%,rgba(4,7,10,0) 58%)}
 .scrim.full{background:radial-gradient(120% 90% at 50% 45%,rgba(4,7,10,0) 0%,rgba(4,7,10,.55) 62%,rgba(4,7,10,.92) 100%)}
 .scrim.dim{background:#04070A;opacity:0;z-index:6}
-
+ 
 /* ─────────────────────────────────────────────
    beats — 한 번에 하나만 보인다
    ───────────────────────────────────────────── */
@@ -102,7 +105,7 @@ img{display:block;max-width:100%}
   text-align:center;
 }
 .beat.on{pointer-events:auto}
-
+ 
 .kicker{
   font-size:clamp(11px,1.05vw,13px);letter-spacing:.14em;
   color:var(--slate);margin:0 0 14px;font-weight:500;
@@ -119,7 +122,7 @@ img{display:block;max-width:100%}
   font-weight:350;text-wrap:pretty;word-break:keep-all;
 }
 .beat.centre .note{margin-left:auto;margin-right:auto}
-
+ 
 /* ─────────────────────────────────────────────
    대형 수치
    ───────────────────────────────────────────── */
@@ -135,7 +138,7 @@ img{display:block;max-width:100%}
   max-width:26ch;margin-left:auto;margin-right:auto;text-wrap:pretty;
 }
 .figsub{font-size:clamp(11px,1.05vw,13px);color:var(--slate);margin:10px auto 0;line-height:1.75;max-width:30ch;text-wrap:pretty}
-
+ 
 /* ─────────────────────────────────────────────
    cover
    ───────────────────────────────────────────── */
@@ -161,7 +164,7 @@ img{display:block;max-width:100%}
   opacity:0;animation:rise 1s .85s ease-out forwards;
 }
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-
+ 
 .cue{
   position:absolute;left:50%;bottom:40px;transform:translateX(-50%);
   z-index:4;display:flex;flex-direction:column;align-items:center;gap:11px;
@@ -170,12 +173,12 @@ img{display:block;max-width:100%}
 .cue span{font-size:11px;letter-spacing:.18em;color:var(--slate)}
 .cue i{display:block;width:1px;height:46px;background:linear-gradient(var(--slate),transparent);animation:drop 2.4s ease-in-out infinite}
 @keyframes drop{0%,100%{transform:scaleY(.35);transform-origin:top;opacity:.4}50%{transform:scaleY(1);transform-origin:top;opacity:1}}
-
+ 
 /* ─────────────────────────────────────────────
    심박 / ECG
    ───────────────────────────────────────────── */
 #ecg{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:200px;z-index:2;opacity:.9}
-
+ 
 /* ─────────────────────────────────────────────
    8시간 게이지
    ───────────────────────────────────────────── */
@@ -184,7 +187,7 @@ img{display:block;max-width:100%}
 .gauge .bar>i{position:absolute;inset:0 auto 0 0;width:0;background:var(--frost)}
 .gauge .row{display:flex;justify-content:space-between;margin-top:11px;font-size:12px;color:var(--slate);font-variant-numeric:tabular-nums;letter-spacing:.06em}
 .beat.centre .gauge{margin-left:auto;margin-right:auto}
-
+ 
 /* ─────────────────────────────────────────────
    배율 / 온도 / 연도 계기
    ───────────────────────────────────────────── */
@@ -194,7 +197,7 @@ img{display:block;max-width:100%}
   font-variant-numeric:tabular-nums;
 }
 .readout b{font-weight:600}
-
+ 
 /* ─────────────────────────────────────────────
    얼음 vs 유리화 비교 슬라이더
    ───────────────────────────────────────────── */
@@ -224,7 +227,7 @@ img{display:block;max-width:100%}
 .compare .tag.l{left:14px}
 .compare .tag.r{right:14px}
 .cmp-hint{font-size:12px;color:var(--slate);margin:18px 0 0;text-align:center;letter-spacing:.04em}
-
+ 
 /* ─────────────────────────────────────────────
    서리 오버레이
    ───────────────────────────────────────────── */
@@ -236,7 +239,7 @@ img{display:block;max-width:100%}
     radial-gradient(56% 48% at 50% 50%,rgba(255,255,255,.10),transparent 78%);
   mix-blend-mode:screen;filter:blur(2px);
 }
-
+ 
 /* ─────────────────────────────────────────────
    워프 캔버스
    ───────────────────────────────────────────── */
@@ -249,7 +252,7 @@ img{display:block;max-width:100%}
 }
 .milestones b{font-weight:400;transition:color .3s,opacity .3s;opacity:.32}
 .milestones b.lit{color:var(--frost);opacity:1}
-
+ 
 /* ─────────────────────────────────────────────
    마지막 질문
    ───────────────────────────────────────────── */
@@ -278,7 +281,7 @@ img{display:block;max-width:100%}
 .answer.show{opacity:1}
 .answer em{font-style:normal;color:#fff}
 .disclose{font-size:11.5px;color:var(--slate);margin:16px 0 0;letter-spacing:.03em}
-
+ 
 /* ─────────────────────────────────────────────
    크레딧
    ───────────────────────────────────────────── */
@@ -293,7 +296,7 @@ footer{
 .credits a{color:var(--frost);text-decoration:none;border-bottom:1px solid rgba(143,186,212,.35)}
 .credits a:hover{border-bottom-color:var(--frost)}
 .srcs{display:grid;gap:9px;font-size:13px;line-height:1.8;color:var(--slate)}
-
+ 
 /* ─────────────────────────────────────────────
    mobile
    ───────────────────────────────────────────── */
@@ -308,7 +311,7 @@ footer{
   .readout{top:78px}
   .milestones{gap:12px;font-size:10px}
 }
-
+ 
 /* ─────────────────────────────────────────────
    reduced motion — 스크롤 연출을 끄고 읽기 문서로 전환
    ───────────────────────────────────────────── */
@@ -327,12 +330,12 @@ footer{
 </style>
 <script>document.documentElement.className="js";</script>
 </head>
-
+ 
 <body>
 <div id="rail"><i></i></div>
-
+ 
 <main>
-
+ 
 <!-- ═══════════ 00 · 훅 ═══════════ -->
 <section class="act" id="cover" style="height:200vh">
   <div class="stage">
@@ -341,17 +344,17 @@ footer{
     </div>
     <div class="scrim full"></div>
     <div class="scrim dim" data-dim="0.72,1,0,1"></div>
-
+ 
     <div class="cover-wrap">
       <p class="brand">아시아경제 비주얼뉴스</p>
       <h1 class="title">250년 뒤에<br>깨워주세요</h1>
       <p class="deck">2억원을 내고 냉동된 사람들이 있다. 순서를 기다리는 계약자는 4,000명이 넘는다. 그들이 통과하는 8시간과, 기다리기로 한 250년을 따라가 본다.</p>
     </div>
-
+ 
     <div class="cue"><i></i><span>스크롤</span></div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 01 · 숫자 ═══════════ -->
 <section class="act" id="numbers" style="height:520vh">
   <div class="stage">
@@ -359,25 +362,25 @@ footer{
       <img src="./01-facility.png" alt="대형 액체질소 듀어가 늘어선 냉동보존 시설 내부" data-k="1.0,1.12" loading="lazy">
     </div>
     <div class="scrim full"></div>
-
+ 
     <div class="beat centre" data-band="0.02,0.20">
       <p class="fig"><span data-c="0,2,0.02,0.16,int">0</span><small>억원</small></p>
       <p class="figcap">전신 냉동보존 한 건에 드는 비용</p>
       <p class="figsub">시신 이송과 영구 보관까지 포함한 금액. 대부분 생명보험 수익자를 보존기관으로 지정해 지불한다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.26,0.44">
       <p class="fig"><span data-c="0,4000,0.26,0.40,comma">0</span><small>명+</small></p>
       <p class="figcap">사망 후 냉동보존을 계약해 둔 전 세계 대기자</p>
       <p class="figsub">아직 살아 있는 사람들이다. 순서는 사망 시점이 정한다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.50,0.68">
       <p class="fig">약 <span data-c="0,800,0.50,0.64,comma">0</span><small>명</small></p>
       <p class="figcap">지금 이 순간 액체질소 안에 있는 사람</p>
       <p class="figsub">기관별 집계로는 700명대, 업계 추정을 넓게 잡아도 1,000명 안쪽이다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.74,0.96">
       <p class="fig"><span data-c="0,3,0.74,0.86,int">0</span><small>명</small></p>
       <p class="figcap">한국에서 이 선택을 한 사람</p>
@@ -385,7 +388,7 @@ footer{
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 02 · 법적 사망 ═══════════ -->
 <section class="act" id="death" style="height:420vh">
   <div class="stage">
@@ -394,18 +397,18 @@ footer{
     </div>
     <div class="scrim full"></div>
     <canvas id="ecg"></canvas>
-
+ 
     <div class="beat lower" data-band="0.04,0.26">
       <p class="kicker">시작점</p>
       <p class="line">냉동보존은 죽은 뒤에 시작된다.</p>
       <p class="note">법적 사망 선고가 나기 전에는 아무것도 할 수 없다. 살아 있는 사람에게 하면 살인이다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.34,0.56">
       <p class="line" style="color:#fff">심장이 멈춘다.</p>
       <p class="note">선고가 나오면 곧바로 시신을 얼음물로 옮기고, 멈춘 심폐 순환을 기계로 다시 돌린다. 뇌에 산소를 계속 보내기 위해서다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.64,0.94">
       <p class="kicker">냉각</p>
       <p class="line">여기서부터는 분 단위 싸움이다.</p>
@@ -413,7 +416,7 @@ footer{
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 03 · 혈액 제거 · 냉동보호제 ═══════════ -->
 <section class="act" id="perfusion" style="height:480vh">
   <div class="stage">
@@ -421,13 +424,13 @@ footer{
       <img src="./03-vessel.png" alt="혈관 내부로 냉동보호제가 퍼져 나가는 메디컬 일러스트" data-k="1.16,1.0" style="--focal:42% 50%" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
-
+ 
     <div class="beat lower" data-band="0.04,0.24">
       <p class="kicker">1단계</p>
       <p class="line">피를 전부 빼낸다.</p>
       <p class="note">혈액은 얼면 부피가 늘어 혈관을 터뜨린다. 가슴을 열어 큰 혈관에 관을 연결하고, 순환계 전체를 비운다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.32,0.60">
       <p class="kicker">2단계</p>
       <p class="line">빈 혈관을 부동액으로 채운다.</p>
@@ -437,7 +440,7 @@ footer{
         <div class="row"><span>00:00</span><span data-c="0,8,0.32,0.60,hour">00:00</span><span>08:00</span></div>
       </div>
     </div>
-
+ 
     <div class="beat lower" data-band="0.68,0.94">
       <p class="kicker">목표</p>
       <p class="line">목적은 얼리는 것이 아니다.</p>
@@ -445,7 +448,7 @@ footer{
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 04 · 몸 안으로 ═══════════ -->
 <section class="act" id="zoom" style="height:460vh">
   <div class="stage">
@@ -456,20 +459,20 @@ footer{
       <img src="./04a-ice.png" alt="세포 내부 구조" style="opacity:0" data-k="1.9,1.0" data-o="0.46,0.62,in" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
-
+ 
     <p class="readout" data-ro="0.10,0.98">배율 <b><span data-c="1,20000,0.12,0.92,mag">×1</span></b></p>
-
+ 
     <div class="beat lower" data-band="0.04,0.30">
       <p class="line">이제 몸 안으로 들어간다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.70,0.96">
       <p class="line">세포 하나까지.</p>
       <p class="note">냉동보존의 성패는 시설이나 탱크가 아니라 이 크기에서 갈린다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 05 · 얼음 결정 vs 유리화 ═══════════ -->
 <section class="act" id="ice" style="height:620vh">
   <div class="stage">
@@ -478,18 +481,18 @@ footer{
     </div>
     <div class="frostlayer" data-frost="0.08,0.46"></div>
     <div class="scrim bottom"></div>
-
+ 
     <div class="beat lower" data-band="0.04,0.26">
       <p class="kicker">얼음</p>
       <p class="line">물이 얼면 결정이 자란다.</p>
       <p class="note">결정은 자라면서 세포막을 안쪽에서 밀어낸다. 밀린 막은 찢어진다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.32,0.52">
       <p class="line">찢어진 세포는 되돌릴 수 없다.</p>
       <p class="note">다시 녹여도 원래대로 붙지 않는다. 냉동보존이 가장 두려워하는 손상이다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.60,0.98">
       <p class="kicker" style="text-align:center">유리화 · vitrification</p>
       <div class="compare" id="cmp">
@@ -504,7 +507,7 @@ footer{
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 06 · 머리를 아래로 ═══════════ -->
 <section class="act" id="invert" style="height:480vh">
   <div class="stage">
@@ -512,24 +515,24 @@ footer{
       <img src="./05-inverted.jpg" alt="액체질소 듀어 단면. 인체가 머리를 아래로 향한 채 보관돼 있다" data-k="1.1,1.0" data-rot="0.10,0.52" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
-
+ 
     <div class="beat lower" data-band="0.02,0.22">
       <p class="kicker">보관</p>
       <p class="line">몸을 거꾸로 세운다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.56,0.78">
       <p class="line">머리가 가장 깊은 곳에 놓인다.</p>
       <p class="note">액체질소가 새거나 증발하면 수면은 위에서부터 내려간다. 마지막까지 잠겨 있어야 할 부위를 맨 아래에 두는 것이다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.84,0.98">
       <p class="line">지켜야 할 것은 몸이 아니라 뇌다.</p>
       <p class="note">실제로 보존자 가운데 상당수는 머리만 남기는 방식을 택한다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 07 · -196℃ ═══════════ -->
 <section class="act" id="cold" style="height:420vh">
   <div class="stage">
@@ -538,41 +541,41 @@ footer{
     </div>
     <div class="frostlayer" data-frost="0.10,0.62"></div>
     <div class="scrim full"></div>
-
+ 
     <div class="beat centre" data-band="0.04,0.52">
       <p class="fig"><span data-c="36.5,-196,0.06,0.46,temp">36.5</span><small>℃</small></p>
       <p class="figcap">액체질소가 끓는 온도까지 내려간다</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.60,0.96">
       <p class="line">이 온도에서 시간은 사실상 멈춘다.</p>
       <p class="note">화학반응이 거의 일어나지 않는다. 100년을 두든 1,000년을 두든 상태는 같다. 전기도 필요 없다. 증발한 질소만 채워 넣으면 된다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 08 · 250년 ═══════════ -->
 <section class="act" id="warpact" style="height:560vh">
   <div class="stage">
     <canvas id="warp"></canvas>
     <div class="scrim full"></div>
-
+ 
     <div class="beat centre" data-band="0.04,0.86">
       <p class="fig"><span data-c="2026,2276,0.06,0.80,year">2026</span></p>
       <p class="figcap">계약서에 적힌 시간</p>
     </div>
-
+ 
     <div class="milestones" id="ms" data-ro="0.06,0.86">
       <b data-y="2050">2050</b><b data-y="2100">2100</b><b data-y="2150">2150</b><b data-y="2200">2200</b><b data-y="2276">2276</b>
     </div>
-
+ 
     <div class="beat lower" data-band="0.90,1.0">
       <p class="line">그 사이 기관이 먼저 사라질 수도 있다.</p>
       <p class="note">250년간 버틸 조직을 보증할 방법은 없다. 실제로 문을 닫고 보존자를 다른 곳으로 옮긴 기관도 있었다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 09 · 진짜 문제 ═══════════ -->
 <section class="act" id="thaw" style="height:340vh">
   <div class="stage">
@@ -580,17 +583,17 @@ footer{
       <img src="./06-brain.jpg" alt="" data-k="1.3,1.0" data-b="0.08,0.5" loading="lazy" aria-hidden="true">
     </div>
     <div class="scrim full"></div>
-
+ 
     <div class="beat centre" data-band="0.10,0.46">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px)">문제는 얼리는 게 아니다.</p>
     </div>
-
+ 
     <div class="beat centre" data-band="0.54,0.94">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px);color:var(--frost)">다시 녹이는 것이다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 10 · 뇌 미세구조 ═══════════ -->
 <section class="act" id="brain" style="height:480vh">
   <div class="stage">
@@ -598,25 +601,25 @@ footer{
       <img src="./06-brain.jpg" alt="뇌 MRI 단면과 신경 미세구조" data-k="1.0,1.26" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
-
+ 
     <div class="beat lower" data-band="0.04,0.28">
       <p class="kicker">현재 기술</p>
       <p class="line">얼리는 기술은 있다.</p>
       <p class="note">사람의 일부 조직과 장기는 유리화 상태로 보존했다가 되살린 사례가 있다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.36,0.62">
       <p class="line">되살리는 기술은 없다.</p>
       <p class="note">사람 전체를 냉동보존한 뒤 기억과 인격, 의식까지 되돌린 사례는 한 건도 없다. 이 온도에서 보존된 포유류를 되살린 적조차 없다.</p>
     </div>
-
+ 
     <div class="beat lower" data-band="0.70,0.96">
       <p class="line">그래서 이것은 치료가 아니라 베팅이다.</p>
       <p class="note">미래 의학이 지금의 손상을 되돌릴 수 있다는 전제 위에, 2억원과 시신을 건다.</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- ═══════════ 11 · 질문 ═══════════ -->
 <section class="act" id="ask" style="height:180vh">
   <div class="stage">
@@ -624,7 +627,7 @@ footer{
       <img src="./00-cover.png" alt="" data-k="1.2,1.0" data-b="0.0,0.22" loading="lazy" aria-hidden="true">
     </div>
     <div class="scrim full"></div>
-
+ 
     <div class="ask-wrap">
       <h2 class="ask-q">당신이라면,<br>2억원을 내겠습니까?</h2>
       <div class="choices" role="group" aria-label="선택">
@@ -636,9 +639,9 @@ footer{
     </div>
   </div>
 </section>
-
+ 
 </main>
-
+ 
 <footer>
   <div class="credits">
     <div>
@@ -660,16 +663,16 @@ footer{
     </div>
   </div>
 </footer>
-
+ 
 <script>
 (function(){
   "use strict";
-
+ 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+ 
   var acts   = [].slice.call(document.querySelectorAll(".act"));
   var railFill = document.querySelector("#rail > i");
-
+ 
   /* ── helpers ───────────────────────────── */
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
   function lerp(a,b,t){ return a+(b-a)*t; }
@@ -684,7 +687,7 @@ footer{
     return 1;
   }
   function comma(n){ return Math.round(n).toLocaleString("ko-KR"); }
-
+ 
   /* ── 계수기 포맷 ───────────────────────── */
   function fmt(type,v){
     switch(type){
@@ -699,10 +702,10 @@ footer{
       default:      return String(Math.round(v));
     }
   }
-
+ 
   /* 배율은 선형으로 올리면 재미가 없다 → 지수 */
   function magCurve(t){ return Math.pow(20000,t); }
-
+ 
   /* ── 사전 파싱 ─────────────────────────── */
   acts.forEach(function(act){
     act._beats = [].slice.call(act.querySelectorAll(".beat")).map(function(el){
@@ -740,7 +743,7 @@ footer{
       return {el:el,a:d[0],b:d[1],v0:d[2],v1:d[3]};
     });
   });
-
+ 
   /* ── ECG ───────────────────────────────── */
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
   function drawECG(p){
@@ -752,7 +755,7 @@ footer{
     var alive = clamp(1-norm(p,.34,.52),0,1);
     var sweep = clamp(norm(p,.02,.92),0,1);
     var end   = w*sweep;
-
+ 
     ectx.lineWidth = 1.4*dpr;
     ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.30+0.62*alive)+")" : "rgba(169,188,199,0.34)";
     ectx.beginPath();
@@ -772,13 +775,13 @@ footer{
       if(x===0) ectx.moveTo(x,y); else ectx.lineTo(x,y);
     }
     ectx.stroke();
-
+ 
     if(end>2){
       ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,238,242,.9)";
       ectx.beginPath(); ectx.arc(end,mid,2.6*dpr,0,6.2832); ectx.fill();
     }
   }
-
+ 
   /* ── 워프 ──────────────────────────────── */
   var warp = document.getElementById("warp"), wctx = warp && warp.getContext("2d"), stars = [];
   function seedStars(){
@@ -805,18 +808,18 @@ footer{
       wctx.beginPath(); wctx.moveTo(x0,y0); wctx.lineTo(x1,y1); wctx.stroke();
     }
   }
-
+ 
   var msEls = document.querySelectorAll("#ms b");
-
+ 
   /* ── 메인 루프 ─────────────────────────── */
   var vh = window.innerHeight, ticking = false;
-
+ 
   function frame(){
     ticking = false;
     var doc = document.documentElement;
     var total = doc.scrollHeight - vh;
     if(railFill) railFill.style.width = (total>0 ? clamp(window.scrollY/total,0,1)*100 : 0) + "%";
-
+ 
     for(var i=0;i<acts.length;i++){
       var act = acts[i];
       var r = act.getBoundingClientRect();
@@ -826,10 +829,10 @@ footer{
         continue;
       }
       act._was = true;
-
+ 
       var span = r.height - vh;
       var p = span>0 ? clamp(-r.top/span,0,1) : (r.top<=0?1:0);
-
+ 
       /* 텍스트: 한 번에 하나 */
       for(var j=0;j<act._beats.length;j++){
         var bt = act._beats[j];
@@ -843,9 +846,9 @@ footer{
           : "translateY("+shift.toFixed(1)+"px)";
         bt.el.classList.toggle("on", v>0.55);
       }
-
+ 
       if(reduced) continue;
-
+ 
       /* 이미지 */
       for(var m=0;m<act._imgs.length;m++){
         var im = act._imgs[m], e = ease(p);
@@ -856,7 +859,7 @@ footer{
           tf += " rotate("+(rp*180).toFixed(2)+"deg)";
         }
         im.el.style.transform = tf;
-
+ 
         if(im.o){
           var t = norm(p, im.o.a, im.o.b);
           im.el.style.opacity = (im.o.dir==="in" ? t : 1-t).toFixed(3);
@@ -866,7 +869,7 @@ footer{
         if(im.sat) flt.push("saturate("+lerp(im.sat[0]===0?1:im.sat[0],im.sat[1],e).toFixed(3)+")");
         if(flt.length) im.el.style.filter = flt.join(" ");
       }
-
+ 
       /* 계수기 */
       for(var c=0;c<act._cnts.length;c++){
         var ct = act._cnts[c];
@@ -875,7 +878,7 @@ footer{
         var s = fmt(ct.type, val);
         if(s !== ct.last){ ct.last = s; ct.el.textContent = s; }
       }
-
+ 
       for(var f=0;f<act._fills.length;f++){
         var fl = act._fills[f];
         fl.el.style.width = (norm(p,fl.a,fl.b)*100).toFixed(2)+"%";
@@ -892,7 +895,7 @@ footer{
         var dm = act._dims[dz];
         dm.el.style.opacity = lerp(dm.v0, dm.v1, norm(p,dm.a,dm.b)).toFixed(3);
       }
-
+ 
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
@@ -903,9 +906,9 @@ footer{
       }
     }
   }
-
+ 
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(frame); } }
-
+ 
   function sizeCanvas(cv){
     if(!cv) return;
     var dpr = Math.min(window.devicePixelRatio||1, 2);
@@ -914,13 +917,13 @@ footer{
     cv.width  = Math.max(1, Math.round(b.width*dpr));
     cv.height = Math.max(1, Math.round(b.height*dpr));
   }
-
+ 
   function onResize(){
     vh = window.innerHeight;
     sizeCanvas(ecg); sizeCanvas(warp); seedStars();
     onScroll();
   }
-
+ 
   /* ── 비교 슬라이더 ─────────────────────── */
   var cmp = document.getElementById("cmp");
   if(cmp){
@@ -946,7 +949,7 @@ footer{
     cmp.setAttribute("role","slider");
     cmp.setAttribute("aria-label","얼음 결정과 유리화 비교");
   }
-
+ 
   /* ── 마지막 질문 ───────────────────────── */
   var ansEl = document.getElementById("ans"), discEl = document.getElementById("disc");
   var TEXT = {
@@ -963,12 +966,12 @@ footer{
       try{ parent.postMessage({type:"cryo:vote", value:btn.dataset.v}, "*"); }catch(err){}
     });
   });
-
+ 
   /* ── iframe 높이 통지 (선택) ───────────── */
   function notifyHeight(){
     try{ parent.postMessage({type:"cryo:height", height:document.documentElement.scrollHeight}, "*"); }catch(err){}
   }
-
+ 
   /* ── init ──────────────────────────────── */
   window.addEventListener("scroll", onScroll, {passive:true});
   window.addEventListener("resize", onResize);
@@ -979,3 +982,4 @@ footer{
 </script>
 </body>
 </html>
+ 
