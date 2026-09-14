@@ -743,6 +743,49 @@ footer{
 /* ─────────────────────────────────────────────
    reduced motion — 스크롤 연출을 끄고 읽기 문서로 전환
    ───────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────
+   mobile performance / viewport stability
+   ───────────────────────────────────────────── */
+@media (max-width:720px){
+  html,body{overscroll-behavior:none;background:#04070A}
+  body{min-height:100%;-webkit-tap-highlight-color:transparent}
+  .stage{height:100vh;height:100svh;height:100dvh}
+  .cover-wrap{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .title{font-size:clamp(44px,15vw,74px);line-height:1.06}
+  .deck{font-size:14.5px;line-height:1.78;max-width:29ch;margin-top:24px}
+  .beat.lower{left:max(20px,env(safe-area-inset-left));right:max(20px,env(safe-area-inset-right));bottom:max(52px,calc(env(safe-area-inset-bottom) + 42px));max-width:calc(100vw - 40px)}
+  .beat.centre{left:max(18px,env(safe-area-inset-left));right:max(18px,env(safe-area-inset-right))}
+  .note{font-size:14px;line-height:1.78}
+  .fig{font-size:clamp(50px,16vw,86px)}
+  .figcap{font-size:14.5px;margin-top:20px}
+  .figsub{font-size:12.5px;line-height:1.68}
+  .compare{width:min(86vw,64dvh,420px)}
+  .compare .handle::after{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 0 18px rgba(143,186,212,.38)}
+  .compare.idle .handle::after{animation:none}
+  .readout{top:max(66px,calc(env(safe-area-inset-top) + 50px))}
+  .monitor{top:max(66px,calc(env(safe-area-inset-top) + 50px))}
+  .milestones{bottom:max(42px,calc(env(safe-area-inset-bottom) + 34px));gap:8px;font-size:11px}
+  .wake-btn{padding:21px 34px 21px 40px;letter-spacing:.26em}
+  .wake-btn::after{inset:-9px}
+  .choices{margin-top:34px;gap:10px}
+  .choice{padding:14px 26px;font-size:15px}
+  footer{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .src-card{grid-template-columns:1fr}
+  .src-thumb{min-height:128px;max-height:34dvh}
+  .cat-link{padding-left:16px;padding-right:16px}
+}
+
+@media (max-width:390px){
+  .title{font-size:clamp(40px,14vw,62px)}
+  .deck{max-width:27ch;font-size:14px}
+  .line{font-size:clamp(22px,6.2vw,29px)}
+  .compare{width:min(84vw,58dvh,360px)}
+  .cb-legend b{grid-template-columns:12px 1fr auto;gap:8px}
+  .cb-legend b i{font-size:12px}
+  .cb-legend b u{font-size:13px}
+}
+
 @media (prefers-reduced-motion:reduce){
   .act{height:auto !important}
   .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
@@ -1316,9 +1359,11 @@ footer{
 
   /* ── 250년 워프 ────────────────────────── */
   var warp = document.getElementById("warp"), wctx = warp && warp.getContext("2d"), stars = [];
+  var isMobile = window.matchMedia && window.matchMedia("(max-width:720px)").matches;
   function seedStars(){
     stars = [];
-    for(var i=0;i<230;i++){
+    var starCount = isMobile ? 120 : 230;
+    for(var i=0;i<starCount;i++){
       stars.push({
         a: Math.random()*6.2832,
         r: Math.random(),
@@ -1681,7 +1726,7 @@ footer{
 
   function sizeCanvas(cv){
     if(!cv) return;
-    var dpr = Math.min(window.devicePixelRatio||1, 2);
+    var dpr = Math.min(window.devicePixelRatio||1, isMobile ? 1.35 : 2);
     window._dpr = dpr;
     var b = cv.getBoundingClientRect();
     cv.width  = Math.max(1, Math.round(b.width*dpr));
@@ -1775,13 +1820,34 @@ footer{
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:wheel", deltaY:e.deltaY, deltaMode:e.deltaMode||0}, "*"); }catch(err){}
     }, {passive:false});
+
+    /* 모바일에서는 iframe이 손가락 제스처를 가로채지 않도록
+       일반 영역의 세로 스와이프를 부모 기사 스크롤로 전달한다.
+       비교 슬라이더·버튼·링크는 그대로 직접 조작 가능하다. */
+    var touchY = null;
+    function isInteractiveTarget(t){
+      return !!(t && t.closest && t.closest(".compare,button,a,input,textarea,select,[role=slider]"));
+    }
+    window.addEventListener("touchstart", function(e){
+      if(!e.touches || e.touches.length!==1 || isInteractiveTarget(e.target)){ touchY=null; return; }
+      touchY=e.touches[0].clientY;
+    }, {passive:true});
+    window.addEventListener("touchmove", function(e){
+      if(touchY===null || !e.touches || e.touches.length!==1 || isInteractiveTarget(e.target)) return;
+      var y=e.touches[0].clientY, dy=touchY-y;
+      touchY=y;
+      if(Math.abs(dy)<1) return;
+      e.preventDefault();
+      try{ parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*"); }catch(err){}
+    }, {passive:false});
+    window.addEventListener("touchend", function(){ touchY=null; }, {passive:true});
+    window.addEventListener("touchcancel", function(){ touchY=null; }, {passive:true});
   }
 
   /* ── init ──────────────────────────────── */
   window.addEventListener("scroll", onScroll, {passive:true});
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
-  window.addEventListener("resize", notifyHeight);
   window.addEventListener("orientationchange", notifyHeight);
   window.addEventListener("load", function(){ onResize(); notifyHeight(); });
   onResize();
