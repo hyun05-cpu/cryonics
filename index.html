@@ -258,7 +258,7 @@ img{display:block;max-width:100%}
    얼음 vs 유리화 비교 슬라이더
    ───────────────────────────────────────────── */
 .compare{
-  position:relative;width:min(78vw,560px);aspect-ratio:1/1;
+  position:relative;width:min(80vw,52vh,560px);aspect-ratio:1/1;
   margin:0 auto;--split:50%;
   border:1px solid rgba(169,188,199,.18);
   overflow:hidden;touch-action:pan-y;cursor:ew-resize;
@@ -309,47 +309,26 @@ img{display:block;max-width:100%}
    혈관 관류
    ───────────────────────────────────────────── */
 .perfuse{
-  position:absolute;inset:0;overflow:hidden;pointer-events:none;
-  --pf:0%;--pfn:0;
-  mix-blend-mode:screen;
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;--pf:0%;
+  -webkit-mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 15%),rgba(0,0,0,.4) calc(var(--pf) - 4%),transparent var(--pf));
+  mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 15%),rgba(0,0,0,.4) calc(var(--pf) - 4%),transparent var(--pf));
 }
-/* 혈관이 좌하 → 우상으로 흐르므로 그 축에 맞춰 띠를 눕힌다 */
-.pf-band{
-  position:absolute;left:-8%;top:43%;height:24%;
-  width:calc(124% * var(--pfn));
-  transform:rotate(-17deg);transform-origin:0 50%;
-  overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent),
-                     linear-gradient(90deg,#000 88%,transparent);
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent),
-             linear-gradient(90deg,#000 88%,transparent);
-  mask-composite:intersect;
-  background:linear-gradient(90deg,
-    rgba(138,196,228,.34) 0%,
-    rgba(176,218,240,.22) 60%,
-    rgba(210,238,250,.10) 100%);
-  filter:blur(6px);
+/* 같은 혈관 이미지를 한랭색으로 착색해 겹친다 — 형태를 정확히 따라간다 */
+.pf-img{
+  width:100%;height:100%;object-fit:cover;object-position:var(--focal,50% 50%);
+  filter:grayscale(1) brightness(1.5) sepia(1) hue-rotate(168deg) saturate(3.2) contrast(.96);
+  mix-blend-mode:screen;opacity:.55;
 }
-.pf-stripes{
-  position:absolute;inset:0;width:300%;
-  background:repeating-linear-gradient(88deg,
+.pf-sheen{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(96deg,
     rgba(238,252,255,0) 0px,
-    rgba(238,252,255,.30) 22px,
-    rgba(238,252,255,0) 62px);
-  animation:flow 2.8s linear infinite;
-  filter:blur(3px);
+    rgba(238,252,255,.16) 26px,
+    rgba(238,252,255,0) 74px);
+  mix-blend-mode:screen;filter:blur(6px);
+  animation:flow 3.4s linear infinite;
 }
-@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(62px)} }
-.pf-head{
-  position:absolute;right:-6%;top:50%;
-  width:22%;height:230%;transform:translateY(-50%);
-  background:radial-gradient(closest-side,
-    rgba(240,252,255,.65),
-    rgba(180,222,244,.22) 55%,
-    rgba(180,222,244,0) 100%);
-  filter:blur(12px);
-}
+@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(74px)} }
 
 /* ─────────────────────────────────────────────
    비용 분해 막대
@@ -368,7 +347,7 @@ img{display:block;max-width:100%}
   font-style:normal;font-size:clamp(12.5px,1.25vw,14.5px);
   letter-spacing:.01em;color:var(--slate-lt);text-align:left;
 }
-.cb-legend b u s{
+.cb-legend b u var{
   text-decoration:none;font-size:.72em;font-weight:500;
   color:var(--slate);letter-spacing:.02em;margin-left:5px;
 }
@@ -378,7 +357,7 @@ img{display:block;max-width:100%}
   text-align:right;
 }
 .cb-legend b u s{
-  display:block;text-decoration:none;font-size:11px;font-weight:500;
+  display:block;text-decoration:none;font-style:normal;font-size:11px;font-weight:500;
   letter-spacing:.06em;color:var(--slate);margin-top:3px;
 }
 .cb-legend b em{width:14px;height:2px}
@@ -571,16 +550,16 @@ img{display:block;max-width:100%}
 }
 .wake-reply.on{opacity:1}
 .wake-reply em{
-  font-style:normal;color:#DCEEF9;display:block;margin-top:14px;
-  font-size:1.5em;line-height:1.3;letter-spacing:-.015em;
-  opacity:0;transform:translateY(10px);
-  animation:wakeline 1.5s .55s cubic-bezier(.16,1,.3,1) forwards,
-            wakeglow 3.4s 2s ease-in-out infinite;
+  font-style:normal;color:#9BD2F2;display:block;margin-top:26px;
+  font-size:1.55em;line-height:1.3;letter-spacing:-.015em;
+  opacity:0;transform:translateY(14px);
+  animation:wakeline 1.6s 1.5s cubic-bezier(.16,1,.3,1) forwards,
+            wakeglow 3.4s 3s ease-in-out infinite;
 }
 @keyframes wakeline{ to{opacity:1;transform:none} }
 @keyframes wakeglow{
-  0%,100%{text-shadow:0 0 16px rgba(143,186,212,.35)}
-  50%{text-shadow:0 0 30px rgba(255,255,255,.4),0 0 70px rgba(143,186,212,.9)}
+  0%,100%{text-shadow:0 0 18px rgba(120,190,230,.45)}
+  50%{text-shadow:0 0 34px rgba(190,230,255,.65),0 0 78px rgba(120,190,230,1)}
 }
 
 /* 서리 균열 */
@@ -793,11 +772,11 @@ footer{
       <div class="costbar" id="costbar">
         <div class="cb-track" data-cb="0.05,0.12"><i class="cb-a"></i><i class="cb-b"></i></div>
         <div class="cb-legend">
-          <b class="a"><em></em><i>안정화·냉동 처리</i><u>약 5,800만원 <s>6만 AUD</s></u></b>
-          <b class="b"><em></em><i>무기한 보관</i><u>약 1억 4,400만원 <s>15만 AUD</s></u></b>
+          <b class="a"><em></em><i>안정화·냉동 처리</i><u>약 5,800만원<var>6만 AUD</var></u></b>
+          <b class="b"><em></em><i>무기한 보관</i><u>약 1억 4,400만원<var>15만 AUD</var></u></b>
         </div>
       </div>
-      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러(약 2억원). 연회비 350호주달러(약 34만원)는 별도다.</p>
+      <p class="figsub">호주 서던 크라이오닉스 기준 약 2억원(21만 호주달러). 연회비 약 34만원(350호주달러)은 별도다.</p>
     </div>
 
     <div class="beat centre" data-band="0.23,0.34">
@@ -856,11 +835,9 @@ footer{
   <div class="stage">
     <div class="plate">
       <img src="./03-vessel.png" alt="혈관 내부로 냉동보호제가 퍼져 나가는 메디컬 일러스트" data-k="1.16,1.0" style="--focal:42% 50%" loading="lazy">
-      <div class="perfuse" id="perfuse" data-pf="0.24,0.70">
-        <div class="pf-band">
-          <div class="pf-stripes"></div>
-          <span class="pf-head"></span>
-        </div>
+      <div class="perfuse" id="perfuse" data-pf="0.22,0.72">
+        <img class="pf-img" src="./03-vessel.png" alt="" aria-hidden="true" data-k="1.16,1.0" style="--focal:42% 50%">
+        <div class="pf-sheen"></div>
       </div>
     </div>
     <div class="scrim bottom"></div>
@@ -915,7 +892,7 @@ footer{
 </section>
 
 <!-- ═══════════ 05 · 얼음 결정 vs 유리화 ═══════════ -->
-<section class="act" id="ice" style="height:620vh">
+<section class="act" id="ice" style="height:700vh">
   <div class="stage">
     <div class="plate">
       <img src="./04a-ice.png" alt="세포 안에서 자라나는 얼음 결정" data-k="1.0,1.5" data-o="0.0,0.58,out" loading="lazy">
@@ -934,7 +911,7 @@ footer{
       <p class="note br">다시 녹여도 원래대로 붙지 않는다.<br>냉동보존이 가장 두려워하는 손상이다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.60,0.98">
+    <div class="beat centre" data-band="0.58,0.88">
       <p class="kicker" style="text-align:center">유리화 · vitrification</p>
       <div class="compare idle" id="cmp">
         <img class="bot" src="./04b-vitrified.png" alt="유리화로 결정 없이 굳은 세포">
@@ -1076,7 +1053,7 @@ footer{
       <p class="line" style="font-size:clamp(30px,5.2vw,64px);color:var(--frost)">다시 녹이는 것이다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.52,0.98">
+    <div class="beat centre" data-band="0.52,0.90">
       <p class="kicker" style="text-align:center">과학계의 비유</p>
       <div class="compare" id="berry">
         <img class="bot" src="./07b-berry-thawed.png" alt="해동 뒤 무너진 딸기">
@@ -1641,9 +1618,7 @@ footer{
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
       }
       if(act.id==="perfusion" && perfuse){
-        var pv = ease(norm(p,pfA,pfB));
-        perfuse.style.setProperty("--pf", (pv*100).toFixed(2)+"%");
-        perfuse.style.setProperty("--pfn", pv.toFixed(4));
+        perfuse.style.setProperty("--pf", (ease(norm(p,pfA,pfB))*100).toFixed(2)+"%");
       }
       if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
