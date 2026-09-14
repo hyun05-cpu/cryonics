@@ -1757,10 +1757,32 @@ footer{
     try{ parent.postMessage({type:"cryo:height", height:document.documentElement.scrollHeight}, "*"); }catch(err){}
   }
 
+  /* ── 부모 기사 단일 스크롤 연동 ───────────── */
+  var framed = window.parent !== window;
+  window.addEventListener("message", function(e){
+    if(!e.data) return;
+    if(e.data.type === "cryo:setScroll"){
+      var max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      var pp = clamp(Number(e.data.progress)||0, 0, 1);
+      window.scrollTo(0, max * pp);
+    }else if(e.data.type === "cryo:requestHeight"){
+      notifyHeight();
+    }
+  });
+
+  if(framed){
+    window.addEventListener("wheel", function(e){
+      e.preventDefault();
+      try{ parent.postMessage({type:"cryo:wheel", deltaY:e.deltaY, deltaMode:e.deltaMode||0}, "*"); }catch(err){}
+    }, {passive:false});
+  }
+
   /* ── init ──────────────────────────────── */
   window.addEventListener("scroll", onScroll, {passive:true});
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
+  window.addEventListener("resize", notifyHeight);
+  window.addEventListener("orientationchange", notifyHeight);
   window.addEventListener("load", function(){ onResize(); notifyHeight(); });
   onResize();
 })();
