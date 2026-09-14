@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Noto+Serif+KR:wght@500;700&display=swap">
 <link rel="preload" as="image" href="./00-cover.png">
 
 <style>
@@ -32,7 +32,7 @@
   --pulse:#B8563A;            /* 체온. 2막에서 한 번만 쓰고 팔레트에서 사라진다 */
 
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  --serif:"Noto Serif KR",serif;
+  --serif:"Song Myung","Noto Serif KR",serif;
 
   --gut:clamp(20px,5vw,64px);
   --measure:34ch;
@@ -116,9 +116,9 @@ img{display:block;max-width:100%}
 }
 .beat.centre .kicker{justify-content:center}
 .line{
-  font-family:var(--serif);font-weight:500;
-  font-size:clamp(25px,3.2vw,42px);line-height:1.5;
-  letter-spacing:-.012em;margin:0;color:#fff;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(27px,3.5vw,46px);line-height:1.46;
+  letter-spacing:-.01em;margin:0;color:#fff;
   text-wrap:pretty;word-break:keep-all;
 }
 .note{
@@ -161,9 +161,9 @@ img{display:block;max-width:100%}
 }
 .title{
   margin-top:0;
-  font-family:var(--serif);font-weight:700;
-  font-size:clamp(42px,8.4vw,104px);line-height:1.1;
-  letter-spacing:-.035em;margin:0;color:#fff;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(46px,9vw,116px);line-height:1.08;
+  letter-spacing:-.02em;margin:0;color:#fff;
   opacity:0;animation:rise 1.1s .45s cubic-bezier(.16,1,.3,1) forwards;
 }
 .deck{
@@ -380,8 +380,8 @@ img{display:block;max-width:100%}
 #ask .stage{background:var(--ink)}
 .ask-wrap{position:relative;z-index:4;padding:0 var(--gut);max-width:880px;text-align:center}
 .ask-q{
-  font-family:var(--serif);font-weight:700;
-  font-size:clamp(30px,5.6vw,68px);line-height:1.32;letter-spacing:-.03em;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(33px,6vw,74px);line-height:1.3;letter-spacing:-.018em;
   margin:0;color:#fff;text-wrap:balance;
 }
 .choices{display:flex;gap:14px;justify-content:center;margin:46px 0 0;flex-wrap:wrap}
@@ -410,7 +410,51 @@ footer{
   padding:clamp(72px,14vh,140px) var(--gut) clamp(56px,10vh,96px);
   border-top:1px solid rgba(110,132,146,.18);
 }
-.credits{max-width:760px;margin:0 auto;display:grid;gap:30px}
+.credits{max-width:760px;margin:0 auto;display:grid;gap:40px}
+
+.src-card{
+  display:block;position:relative;overflow:hidden;
+  padding:clamp(26px,4vw,38px);
+  border:1px solid rgba(169,188,199,.22);
+  background:linear-gradient(135deg,rgba(143,186,212,.07),rgba(4,7,10,0) 62%);
+  text-decoration:none;border-bottom:1px solid rgba(169,188,199,.22);
+  transition:border-color .35s,background .35s,transform .35s;
+}
+.src-card::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:1px;
+  background:var(--frost);transform:scaleX(0);transform-origin:0 50%;
+  transition:transform .5s cubic-bezier(.16,1,.3,1);
+}
+.src-card:hover{
+  border-color:rgba(143,186,212,.5);
+  background:linear-gradient(135deg,rgba(143,186,212,.13),rgba(4,7,10,0) 62%);
+  transform:translateY(-2px);
+}
+.src-card:hover::after{transform:scaleX(1)}
+.src-kick{
+  display:block;font-size:11px;letter-spacing:.2em;color:var(--frost);
+  font-weight:600;margin:0 0 16px;
+}
+.src-title{
+  display:block;font-family:var(--serif);font-weight:400;
+  font-size:clamp(19px,2.4vw,27px);line-height:1.52;color:#fff;
+  letter-spacing:-.01em;word-break:keep-all;
+}
+.src-go{
+  display:inline-flex;align-items:center;gap:10px;margin:24px 0 0;
+  font-size:12.5px;letter-spacing:.08em;color:var(--slate-lt);font-weight:500;
+}
+.src-go i{
+  display:block;width:26px;height:1px;background:currentColor;position:relative;
+  transition:width .35s;
+}
+.src-go i::after{
+  content:"";position:absolute;right:0;top:-3px;
+  width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;
+  transform:rotate(45deg);
+}
+.src-card:hover .src-go{color:var(--frost)}
+.src-card:hover .src-go i{width:38px}
 .credits h2{font-size:13px;letter-spacing:.14em;color:var(--slate);margin:0;font-weight:500}
 .credits p{margin:0;font-size:14px;line-height:1.95;color:var(--slate-lt);font-weight:350}
 .credits p.notice{color:var(--chalk);border-left:2px solid var(--frost);padding-left:18px}
@@ -425,7 +469,7 @@ footer{
 @media (max-width:720px){
   :root{--measure:100%}
   .beat.lower{bottom:clamp(52px,9vh,96px)}
-  .line{font-size:clamp(22px,5.6vw,30px);line-height:1.52}
+  .line{font-size:clamp(23px,6vw,32px);line-height:1.5}
   .note{font-size:14.5px;max-width:100%;line-height:1.85}
   .figcap,.figsub{max-width:24ch}
   .fig{font-size:clamp(52px,17vw,92px)}
@@ -528,7 +572,7 @@ footer{
       <p class="note">법적 사망 선고가 나기 전에는 아무것도 할 수 없다. 살아 있는 사람에게 하면 살인이다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.24,0.42">
+    <div class="beat lower" data-band="0.22,0.44">
       <p class="line" style="color:#fff">심장이 멈춘다.</p>
       <p class="note">선고가 나오는 즉시 얼음주머니 등으로 몸을 식히기 시작한다. 체온을 떨어뜨려 시간을 버는 것이 첫 번째 일이다.</p>
     </div>
@@ -799,23 +843,11 @@ footer{
       <h2>이미지에 대하여</h2>
       <p class="notice">화면에 쓰인 이미지는 전부 취재 내용을 바탕으로 <b>생성형 AI로 제작한 재현 이미지</b>입니다. 서던 크라이오닉스를 비롯한 특정 기관의 시설이나 실존 인물의 사진이 아니며, 보존자나 그 유족과도 무관합니다.</p>
     </div>
-    <div>
-      <h2>이 기사에 대하여</h2>
-      <p>아시아경제 기사 「2억 내고 ‘250년 뒤에 깨워줘’…대기자만 4000명 몰린 ‘냉동인간’」을 바탕으로 제작한 인터랙티브 비주얼뉴스입니다. 원 기사는 가디언 보도를 인용했습니다.</p>
-    </div>
-    <div>
-      <h2>수치 기준</h2>
-      <div class="srcs">
-        <span>보존 비용 약 2억원 · 대기자 4,000명 이상 — 기사 기준</span>
-        <span>전 세계 보존자 약 800명 — 기관별 집계 합산 시 700명대, 업계 추정 최대 1,000명 안쪽</span>
-        <span>국내 선택 사례 3명 — 기사 기준</span>
-        <span>냉동보호제 주입 약 8시간 · 머리를 아래로 한 보관 · −196℃ — 보존기관 공개 절차</span>
-      </div>
-    </div>
-    <div>
-      <h2>제작</h2>
-      <p>기획·취재 ○○○ 기자 · 인터랙티브 ○○○ · 이미지 ○○○<br>아시아경제 비주얼뉴스</p>
-    </div>
+    <a class="src-card" href="https://view.asiae.co.kr/article/2026091408461986576" target="_blank" rel="noopener">
+      <span class="src-kick">원 기사</span>
+      <span class="src-title">2억 내고 ‘250년 뒤에 깨워줘’<br>…대기자만 4000명 몰린 ‘냉동인간’</span>
+      <span class="src-go">기사 전문 보기<i></i></span>
+    </a>
   </div>
 </footer>
 
@@ -902,42 +934,67 @@ footer{
   /* ── ECG ───────────────────────────────── */
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
 
-  /* 하트 외곽선 한 점 */
-  function heartPt(t, cx, cy, R){
-    var x = 16*Math.pow(Math.sin(t),3);
-    var y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
-    return [cx + x*R/16.5, cy - y*R/16.5];
-  }
+  /* ── 해부학적 심장 외곽선 ──
+     0~100 × 0~120 좌표계의 3차 베지에 조각들. 서브패스별로 끊어 그린다. */
+  var HEART = [
+    [ [38,116, 22,101, 10,86,  8,62],
+      [ 8,62,   6,42,  14,28, 30,26],
+      [30,26,  37,25,  42,26, 48,29],
+      [48,29,  60,24,  76,28, 84,44],
+      [84,44,  92,61,  86,82, 70,98],
+      [70,98,  57,110, 46,114, 38,116] ],
+    [ [50,28,  50,10,  62,2,  72,8],          /* 대동맥궁 */
+      [72,8,   81,14,  78,27, 74,35] ],
+    [ [44,28,  40,13,  30,7,  23,14] ],        /* 폐동맥 */
+    [ [78,31,  82,18,  84,10, 82,1] ],         /* 상대정맥 */
+    [ [16,55,  36,69,  60,65, 82,52] ],        /* 관상구 */
+    [ [47,70,  47,92,  43,105, 38,116] ]       /* 심실 경계 */
+  ];
+  var HEART_PTS = (function(){
+    function cub(a,b,c,d,t){
+      var u=1-t;
+      return u*u*u*a + 3*u*u*t*b + 3*u*t*t*c + t*t*t*d;
+    }
+    return HEART.map(function(sub){
+      var pts=[];
+      sub.forEach(function(g,gi){
+        var n = 26;
+        for(var i=(gi?1:0); i<=n; i++){
+          var t=i/n;
+          pts.push([cub(g[0],g[2],g[4],g[6],t), cub(g[1],g[3],g[5],g[7],t)]);
+        }
+      });
+      return pts;
+    });
+  })();
+  var HEART_N = HEART_PTS.reduce(function(a,b){return a+b.length;},0);
+
+  var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
 
   function drawECG(p){
     if(!ectx) return;
     var w = ecg.width, h = ecg.height, dpr = window._dpr||1;
     ectx.clearRect(0,0,w,h);
-    var mid = h*0.5, cx = w*0.5;
+    var mid = h*0.5;
 
-    var pad   = w*0.055;
+    var pad   = w*0.04;
     var span  = w - pad*2;
-    var sweep = clamp(norm(p,.02,.40),0,1);
+    var sweep = clamp(norm(p,.02,.30),0,1);
     var end   = pad + span*sweep;
-    var alive = clamp(1-norm(p,.24,.40),0,1);
+    var alive = clamp(1-norm(p,.18,.30),0,1);
+    var hT    = ease(clamp(norm(p,.30,.62),0,1));
+    var fade  = 1 - clamp(norm(p,.34,.52),0,1)*0.72;
 
-    /* 심박이 하트로 넘어가는 구간 */
-    var hT    = ease(clamp(norm(p,.50,.90),0,1));
-    var fade  = 1 - clamp(norm(p,.46,.64),0,1)*0.78;
-
-    /* ── 파형 ── */
+    /* ── 심박 파형 ── */
     ectx.globalAlpha = fade;
-    ectx.lineWidth = 1.5*dpr;
-    ectx.lineCap = "round";
-    ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.34+0.60*alive)+")" : "rgba(169,188,199,0.42)";
+    ectx.lineWidth = 1.5*dpr; ectx.lineCap = "round";
+    ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.34+0.60*alive)+")" : "rgba(169,188,199,0.40)";
     ectx.beginPath();
     var period = 130*dpr;
     for(var x=pad; x<=end; x+=1.5*dpr){
-      var y = mid;
-      var la = clamp(1 - norm((x-pad)/span,.30,.50),0,1);
+      var y = mid, la = clamp(1 - norm((x-pad)/span,.22,.40),0,1);
       if(la>.02){
-        var t = (x % period)/period;
-        var amp = 50*dpr*la;
+        var t=(x%period)/period, amp=50*dpr*la;
         if(t>.30&&t<.34) y = mid - amp*0.16*Math.sin((t-.30)/.04*Math.PI);
         else if(t>=.36&&t<.40) y = mid + amp*0.22;
         else if(t>=.40&&t<.44) y = mid - amp;
@@ -949,36 +1006,42 @@ footer{
     ectx.stroke();
     ectx.globalAlpha = 1;
 
-    /* ── 파형 끝이 하트 윤곽으로 이어진다 ── */
-    if(hT > 0.001){
-      var R = Math.min(w*0.42, h*0.40);
-      var steps = 260, upto = Math.floor(steps*hT);
-      ectx.lineWidth = 1.4*dpr;
-      ectx.strokeStyle = "rgba(196,214,224,"+(0.32+0.50*hT).toFixed(3)+")";
-      ectx.shadowColor = "rgba(143,186,212,.55)";
-      ectx.shadowBlur = 16*dpr;
-      ectx.beginPath();
-      for(var i=0;i<=upto;i++){
-        var pt = heartPt(Math.PI + (i/steps)*Math.PI*2, cx, mid, R);
-        if(i===0) ectx.moveTo(pt[0],pt[1]); else ectx.lineTo(pt[0],pt[1]);
-      }
-      ectx.stroke();
-      ectx.shadowBlur = 0;
-
-      /* 그려지는 끝점 */
-      if(hT < 0.995){
-        var tip = heartPt(Math.PI + hT*Math.PI*2, cx, mid, R);
-        ectx.fillStyle = "rgba(232,242,248,.95)";
-        ectx.beginPath(); ectx.arc(tip[0],tip[1],2.6*dpr,0,6.2832); ectx.fill();
-      }
-    }
-
-    /* 파형 진행점 */
     if(end>pad+2 && hT < 0.02){
       ectx.globalAlpha = fade;
       ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,238,242,.9)";
       ectx.beginPath(); ectx.arc(end,mid,2.8*dpr,0,6.2832); ectx.fill();
       ectx.globalAlpha = 1;
+    }
+
+    /* ── 파형이 멎은 자리에서 심장이 그려진다 ── */
+    if(hT > 0.001){
+      var sc = Math.min(w*0.34/100, h*0.74/120);
+      var ox = w*0.655 - 50*sc, oy = mid - 60*sc;
+      var upto = Math.floor(HEART_N*hT), seen = 0, tip = null;
+
+      ectx.lineWidth = 1.5*dpr; ectx.lineJoin = "round";
+      ectx.strokeStyle = "rgba(204,222,232,"+(0.36+0.52*hT).toFixed(3)+")";
+      ectx.shadowColor = "rgba(143,186,212,.6)"; ectx.shadowBlur = 18*dpr;
+
+      for(var si=0; si<HEART_PTS.length; si++){
+        var sub = HEART_PTS[si];
+        if(seen >= upto) break;
+        var n = Math.min(sub.length, upto-seen);
+        ectx.beginPath();
+        for(var i=0;i<n;i++){
+          var px = ox + sub[i][0]*sc, py = oy + sub[i][1]*sc;
+          if(i===0) ectx.moveTo(px,py); else ectx.lineTo(px,py);
+          if(seen+i === upto-1) tip = [px,py];
+        }
+        ectx.stroke();
+        seen += sub.length;
+      }
+      ectx.shadowBlur = 0;
+
+      if(hT < 0.99 && tip){
+        ectx.fillStyle = "rgba(236,244,249,.95)";
+        ectx.beginPath(); ectx.arc(tip[0],tip[1],2.6*dpr,0,6.2832); ectx.fill();
+      }
     }
   }
 
