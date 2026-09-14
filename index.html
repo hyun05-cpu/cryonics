@@ -316,9 +316,9 @@ img{display:block;max-width:100%}
 /* 같은 혈관 이미지를 한랭색으로 착색해 겹친다 — 형태를 정확히 따라간다 */
 .pf-img{
   width:100%;height:100%;object-fit:cover;object-position:var(--focal,50% 50%);
-  /* 색을 입히지 않는다 — 혈색만 빼고 창백하게 만든다 */
-  filter:saturate(.06) brightness(1.18) contrast(1.02);
-  opacity:1;
+  /* 혈색을 빼되 완전한 무채색이 되지는 않게 */
+  filter:saturate(.22) brightness(1.14) contrast(1.0);
+  opacity:.88;
 }
 .pf-sheen{
   position:absolute;inset:0;
@@ -621,7 +621,7 @@ img{display:block;max-width:100%}
    ───────────────────────────────────────────── */
 footer{
   position:relative;z-index:5;background:var(--ink);
-  padding:clamp(72px,14vh,140px) var(--gut) clamp(56px,10vh,96px);
+  padding:clamp(46px,8vh,84px) var(--gut) clamp(56px,10vh,96px);
   border-top:1px solid rgba(110,132,146,.18);
 }
 .credits{max-width:760px;margin:0 auto;display:grid;gap:40px}
@@ -836,7 +836,7 @@ footer{
   <div class="stage">
     <div class="plate">
       <img src="./03-vessel.png" alt="혈관 내부로 냉동보호제가 퍼져 나가는 메디컬 일러스트" data-k="1.16,1.0" style="--focal:42% 50%" loading="lazy">
-      <div class="perfuse" id="perfuse" data-pf="0.22,0.72">
+      <div class="perfuse" id="perfuse" data-pf="0.24,0.86">
         <img class="pf-img" src="./03-vessel.png" alt="" aria-hidden="true" data-k="1.16,1.0" style="--focal:42% 50%">
         <div class="pf-sheen"></div>
       </div>
@@ -1619,7 +1619,8 @@ footer{
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
       }
       if(act.id==="perfusion" && perfuse){
-        perfuse.style.setProperty("--pf", (ease(norm(p,pfA,pfB))*100).toFixed(2)+"%");
+        /* 78%에서 멈춘다 — 오른쪽 적혈구는 붉게 남겨 대비를 유지 */
+        perfuse.style.setProperty("--pf", (ease(norm(p,pfA,pfB))*78).toFixed(2)+"%");
       }
       if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
