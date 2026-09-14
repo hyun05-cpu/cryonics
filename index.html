@@ -287,6 +287,53 @@ img{display:block;max-width:100%}
 .cmp-hint.done{opacity:.35}
 
 /* ─────────────────────────────────────────────
+   비용 분해 막대
+   ───────────────────────────────────────────── */
+.costbar{width:min(80vw,520px);margin:30px auto 0}
+.cb-track{display:flex;height:6px;overflow:hidden;transform:scaleX(0);transform-origin:0 50%}
+.cb-track i{display:block;height:100%}
+.cb-a{flex:6;background:var(--frost)}
+.cb-b{flex:15;background:rgba(169,188,199,.42)}
+.cb-legend{display:flex;justify-content:space-between;gap:16px;margin:16px 0 0}
+.cb-legend b{
+  display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;
+  color:#BCCBD4;letter-spacing:.02em;text-shadow:0 1px 10px rgba(4,7,10,.96);
+}
+.cb-legend b em{width:8px;height:8px;flex:none;font-style:normal}
+.cb-legend b.a em{background:var(--frost)}
+.cb-legend b.b em{background:rgba(169,188,199,.42)}
+
+/* ─────────────────────────────────────────────
+   체온 눈금
+   ───────────────────────────────────────────── */
+.tscale{width:min(84vw,600px);margin:34px auto 0}
+.t-track{position:relative;height:1px;background:rgba(110,132,146,.3)}
+.t-track>i{position:absolute;inset:0 auto 0 0;width:0;height:1px;background:var(--frost);box-shadow:0 0 10px rgba(143,186,212,.8)}
+.t-ticks{display:flex;justify-content:space-between;margin:14px 0 0}
+.t-ticks b{
+  font-size:12px;font-weight:500;letter-spacing:.04em;
+  color:rgba(150,170,182,.45);font-variant-numeric:tabular-nums;
+  transition:color .45s,text-shadow .45s;
+}
+.t-ticks b.lit{color:#E8EEF2;text-shadow:0 0 16px rgba(143,186,212,.7)}
+.t-note{
+  margin:22px auto 0;max-width:34ch;font-size:13.5px;line-height:1.8;
+  color:var(--slate-lt);font-weight:350;min-height:2.6em;
+  transition:opacity .35s;text-wrap:balance;
+}
+
+/* ─────────────────────────────────────────────
+   모니터 헤더
+   ───────────────────────────────────────────── */
+.monitor{
+  position:absolute;left:var(--gut);top:clamp(72px,11vh,112px);z-index:6;
+  font-size:12px;letter-spacing:.14em;color:var(--frost);font-weight:500;
+  font-variant-numeric:tabular-nums;line-height:1.9;
+  text-shadow:0 1px 12px rgba(4,7,10,.98);
+}
+.monitor span{display:block;color:rgba(190,206,215,.8);letter-spacing:.06em;font-size:11.5px}
+
+/* ─────────────────────────────────────────────
    800명 점 분포
    ───────────────────────────────────────────── */
 .dots{
@@ -372,6 +419,46 @@ img{display:block;max-width:100%}
 }
 .milestones b{font-weight:500;transition:color .3s,opacity .3s;opacity:.45}
 .milestones b.lit{color:var(--frost);opacity:1}
+
+/* ─────────────────────────────────────────────
+   WAKE UP
+   ───────────────────────────────────────────── */
+#wake .stage{background:#020406}
+.wake-wrap{position:relative;z-index:5;text-align:center;padding:0 var(--gut)}
+.wake-btn{
+  position:relative;display:inline-block;
+  font-family:var(--sans);font-size:clamp(15px,1.9vw,21px);font-weight:500;
+  letter-spacing:.34em;color:#E8EEF2;
+  background:none;border:0;padding:30px 34px;cursor:pointer;
+  text-shadow:0 0 30px rgba(143,186,212,.5);
+}
+.wake-btn::before,.wake-btn::after{
+  content:"";position:absolute;left:50%;width:0;height:1px;
+  background:rgba(169,188,199,.5);transform:translateX(-50%);
+  transition:width .6s cubic-bezier(.16,1,.3,1);
+}
+.wake-btn::before{top:0}
+.wake-btn::after{bottom:0}
+.wake-btn:hover::before,.wake-btn:hover::after{width:100%}
+.wake-btn.pulse{animation:wakepulse 3.4s ease-in-out infinite}
+@keyframes wakepulse{
+  0%,100%{opacity:.5;text-shadow:0 0 18px rgba(143,186,212,.25)}
+  50%{opacity:1;text-shadow:0 0 42px rgba(143,186,212,.75)}
+}
+.wake-btn[disabled]{cursor:default;animation:none}
+
+.wake-reply{
+  margin:46px auto 0;max-width:34ch;min-height:6em;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(20px,2.7vw,32px);line-height:1.6;color:#fff;
+  opacity:0;transition:opacity 1.2s ease;text-wrap:balance;
+}
+.wake-reply.on{opacity:1}
+.wake-reply em{font-style:normal;color:var(--frost);display:block;margin-top:18px}
+
+/* 서리 균열 */
+#crack{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;opacity:0;transition:opacity .8s}
+#crack.on{opacity:1}
 
 /* ─────────────────────────────────────────────
    마지막 질문
@@ -529,10 +616,17 @@ footer{
     </div>
     <div class="scrim full"></div>
 
-    <div class="beat centre" data-band="0.02,0.15">
+    <div class="beat centre" data-band="0.02,0.18">
       <p class="fig"><span data-c="0,2,0.02,0.12,int">0</span><small>억원</small></p>
       <p class="figcap">전신 냉동보존 한 건에 드는 비용</p>
-      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러. 사망 직후 안정화와 냉동 처리에 6만, 무기한 보관에 15만 호주달러가 든다. 연회비 350호주달러는 별도다.</p>
+      <div class="costbar" id="costbar">
+        <div class="cb-track" data-cb="0.06,0.16"><i class="cb-a"></i><i class="cb-b"></i></div>
+        <div class="cb-legend">
+          <b class="a"><em></em>안정화·냉동 처리 6만</b>
+          <b class="b"><em></em>무기한 보관 15만 (AUD)</b>
+        </div>
+      </div>
+      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러. 연회비 350호주달러는 별도다.</p>
     </div>
 
     <div class="beat centre" data-band="0.21,0.34">
@@ -565,6 +659,7 @@ footer{
     </div>
     <div class="scrim full"></div>
     <canvas id="ecg"></canvas>
+    <p class="monitor" data-ro="0.02,0.62">2026.09.14 04:12<span>법적 사망 확인 · 보존 절차 개시</span></p>
 
     <div class="beat lower" data-band="0.03,0.18">
       <p class="kicker">시작점</p>
@@ -603,10 +698,9 @@ footer{
       <p class="kicker">2단계</p>
       <p class="line">빈 혈관을 부동액으로 채운다.</p>
       <p class="note">농도를 한 번에 올리면 세포가 탈수로 망가진다. 옅은 농도부터 천천히 올린다. 이 단계에만 약 8시간이 걸린다.</p>
-      <div class="gauge live" id="perf">
+      <div class="gauge">
         <div class="bar"><i data-fill="0.32,0.60"></i></div>
         <div class="row"><span>00:00</span><span data-c="0,8,0.32,0.60,hour">00:00</span><span>08:00</span></div>
-        <p class="hint">끌어서 직접 돌려보기</p>
       </div>
     </div>
 
@@ -672,7 +766,6 @@ footer{
         <span class="tag r">유리화</span>
         <span class="handle"></span>
       </div>
-      <p class="cmp-hint" id="cmpHint">‹  좌우로 끌어서 비교하세요  ›</p>
       <p class="note" style="text-align:center">부동액 농도를 충분히 올리면 물은 얼지 않고 결정 없이 유리처럼 굳는다. 조직은 딱딱해지지만 찢기지는 않는다.</p>
     </div>
   </div>
@@ -682,7 +775,7 @@ footer{
 <section class="act" id="invert" style="height:480vh">
   <div class="stage">
     <div class="plate">
-      <img src="./05-inverted.jpg" alt="액체질소 듀어 단면. 인체가 머리를 아래로 향한 채 보관돼 있다" data-k="1.1,1.0" data-rot="0.10,0.52" loading="lazy">
+      <img src="./05-inverted.png" alt="액체질소 듀어 단면. 인체가 머리를 아래로 향한 채 보관돼 있다" data-k="1.1,1.0" data-rot="0.10,0.52" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
     <p class="disclaimer"><b>재현 이미지</b>보존 방식을 설명하기 위한 단면도입니다.</p>
@@ -705,20 +798,27 @@ footer{
 </section>
 
 <!-- ═══════════ 07 · -196℃ ═══════════ -->
-<section class="act" id="cold" style="height:420vh">
+<section class="act" id="cold" style="height:640vh">
   <div class="stage">
     <div class="plate">
-      <img src="./05-inverted.jpg" alt="" data-k="1.0,1.08" data-sat="0.0,0.6" loading="lazy" aria-hidden="true">
+      <img src="./05-inverted.png" alt="" data-k="1.0,1.08" data-sat="0.0,0.6" loading="lazy" aria-hidden="true">
     </div>
     <div class="frostlayer" data-frost="0.10,0.62"></div>
     <div class="scrim full"></div>
 
-    <div class="beat centre" data-band="0.04,0.52">
-      <p class="fig"><span data-c="36.5,-196,0.06,0.46,temp">36.5</span><small>℃</small></p>
+    <div class="beat centre" data-band="0.04,0.62">
+      <p class="fig"><span data-c="36.5,-196,0.06,0.52,temp">36.5</span><small>℃</small></p>
       <p class="figcap">액체질소가 끓는 온도까지 내려간다</p>
+      <div class="tscale">
+        <div class="t-track"><i data-fill="0.06,0.52"></i></div>
+        <div class="t-ticks" id="tticks">
+          <b data-t="36.5">36.5</b><b data-t="0">0</b><b data-t="-130">−130</b><b data-t="-196">−196</b>
+        </div>
+        <p class="t-note" id="tnote">체온에서 출발한다.</p>
+      </div>
     </div>
 
-    <div class="beat lower" data-band="0.60,0.96">
+    <div class="beat lower" data-band="0.70,0.98">
       <p class="line">이 온도에서 시간은 사실상 멈춘다.</p>
       <p class="note">화학반응이 거의 일어나지 않는다. 100년을 두든 1,000년을 두든 상태는 같다. 전기도 필요 없다. 증발한 질소만 채워 넣으면 된다.</p>
     </div>
@@ -747,6 +847,20 @@ footer{
   </div>
 </section>
 
+<!-- ═══════════ 08a · WAKE UP ═══════════ -->
+<section class="act" id="wake" style="height:380vh">
+  <div class="stage">
+    <canvas id="crack"></canvas>
+
+    <div class="beat centre" data-band="0.06,0.94">
+      <div class="wake-wrap">
+        <button class="wake-btn pulse" id="wakeBtn" type="button">WAKE&nbsp;UP?</button>
+        <p class="wake-reply" id="wakeReply"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════ 08b · 확률 ═══════════ -->
 <section class="act" id="odds" style="height:420vh">
   <div class="stage">
@@ -766,25 +880,31 @@ footer{
 </section>
 
 <!-- ═══════════ 09 · 진짜 문제 ═══════════ -->
-<section class="act" id="thaw" style="height:440vh">
+<section class="act" id="thaw" style="height:680vh">
   <div class="stage">
     <div class="plate">
-      <img src="./06-brain.jpg" alt="" data-k="1.3,1.0" data-b="0.08,0.5" loading="lazy" aria-hidden="true">
+      <img src="./06-brain.png" alt="" data-k="1.3,1.0" data-b="0.08,0.5" loading="lazy" aria-hidden="true">
     </div>
     <div class="scrim full"></div>
 
-    <div class="beat centre" data-band="0.06,0.32">
+    <div class="beat centre" data-band="0.04,0.22">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px)">문제는 얼리는 게 아니다.</p>
     </div>
 
-    <div class="beat centre" data-band="0.40,0.64">
+    <div class="beat centre" data-band="0.28,0.44">
       <p class="line" style="font-size:clamp(30px,5.2vw,64px);color:var(--frost)">다시 녹이는 것이다.</p>
     </div>
 
-    <div class="beat lower" data-band="0.72,0.98">
-      <p class="kicker">과학계의 비유</p>
-      <p class="line">꽁꽁 언 딸기를 떠올려 보라.</p>
-      <p class="note">겉모습은 멀쩡하다. 그러나 녹이는 순간 속이 흐물흐물해지며 으깨진다. 얼 때 이미 세포막이 부서졌기 때문이다. 전문가들은 뇌도 같다고 말한다.</p>
+    <div class="beat centre" data-band="0.52,0.98">
+      <p class="kicker" style="text-align:center">과학계의 비유</p>
+      <div class="compare" id="berry">
+        <img class="bot" src="./07b-berry-thawed.png" alt="해동 뒤 무너진 딸기">
+        <img class="top" src="./07a-berry-frozen.png" alt="꽁꽁 언 딸기">
+        <span class="tag l">냉동 상태</span>
+        <span class="tag r">해동 뒤</span>
+        <span class="handle"></span>
+      </div>
+      <p class="note" style="text-align:center">겉모습은 멀쩡하다. 그러나 녹이는 순간 속이 흐물흐물해지며 으깨진다. 얼 때 이미 세포막이 부서졌기 때문이다. 전문가들은 뇌도 같다고 말한다.</p>
     </div>
   </div>
 </section>
@@ -793,7 +913,7 @@ footer{
 <section class="act" id="brain" style="height:480vh">
   <div class="stage">
     <div class="plate">
-      <img src="./06-brain.jpg" alt="뇌 MRI 단면과 신경 미세구조" data-k="1.0,1.26" loading="lazy">
+      <img src="./06-brain.png" alt="뇌 MRI 단면과 신경 미세구조" data-k="1.0,1.26" loading="lazy">
     </div>
     <div class="scrim bottom"></div>
 
@@ -934,41 +1054,6 @@ footer{
   /* ── ECG ───────────────────────────────── */
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
 
-  /* ── 해부학적 심장 외곽선 ──
-     0~100 × 0~120 좌표계의 3차 베지에 조각들. 서브패스별로 끊어 그린다. */
-  var HEART = [
-    [ [38,116, 22,101, 10,86,  8,62],
-      [ 8,62,   6,42,  14,28, 30,26],
-      [30,26,  37,25,  42,26, 48,29],
-      [48,29,  60,24,  76,28, 84,44],
-      [84,44,  92,61,  86,82, 70,98],
-      [70,98,  57,110, 46,114, 38,116] ],
-    [ [50,28,  50,10,  62,2,  72,8],          /* 대동맥궁 */
-      [72,8,   81,14,  78,27, 74,35] ],
-    [ [44,28,  40,13,  30,7,  23,14] ],        /* 폐동맥 */
-    [ [78,31,  82,18,  84,10, 82,1] ],         /* 상대정맥 */
-    [ [16,55,  36,69,  60,65, 82,52] ],        /* 관상구 */
-    [ [47,70,  47,92,  43,105, 38,116] ]       /* 심실 경계 */
-  ];
-  var HEART_PTS = (function(){
-    function cub(a,b,c,d,t){
-      var u=1-t;
-      return u*u*u*a + 3*u*u*t*b + 3*u*t*t*c + t*t*t*d;
-    }
-    return HEART.map(function(sub){
-      var pts=[];
-      sub.forEach(function(g,gi){
-        var n = 26;
-        for(var i=(gi?1:0); i<=n; i++){
-          var t=i/n;
-          pts.push([cub(g[0],g[2],g[4],g[6],t), cub(g[1],g[3],g[5],g[7],t)]);
-        }
-      });
-      return pts;
-    });
-  })();
-  var HEART_N = HEART_PTS.reduce(function(a,b){return a+b.length;},0);
-
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
 
   function drawECG(p){
@@ -979,22 +1064,25 @@ footer{
 
     var pad   = w*0.04;
     var span  = w - pad*2;
-    var sweep = clamp(norm(p,.02,.30),0,1);
+    var sweep = clamp(norm(p,.02,.46),0,1);     /* 파형이 화면을 가로지른다 */
     var end   = pad + span*sweep;
-    var alive = clamp(1-norm(p,.18,.30),0,1);
-    var hT    = ease(clamp(norm(p,.30,.62),0,1));
-    var fade  = 1 - clamp(norm(p,.34,.52),0,1)*0.72;
+    var alive = clamp(1-norm(p,.22,.38),0,1);   /* 박동이 잦아든다 */
+    var fade  = 1 - clamp(norm(p,.66,.98),0,1)*0.88;  /* 끝에서 아주 천천히 사라진다 */
 
-    /* ── 심박 파형 ── */
     ectx.globalAlpha = fade;
     ectx.lineWidth = 1.5*dpr; ectx.lineCap = "round";
-    ectx.strokeStyle = alive>.04 ? "rgba(184,86,58,"+(0.34+0.60*alive)+")" : "rgba(169,188,199,0.40)";
+    ectx.strokeStyle = alive>.04
+      ? "rgba(184,86,58,"+(0.34+0.60*alive)+")"
+      : "rgba(178,198,210,0.46)";
+    ectx.shadowColor = alive>.04 ? "rgba(184,86,58,.35)" : "rgba(143,186,212,.35)";
+    ectx.shadowBlur = 10*dpr;
     ectx.beginPath();
+
     var period = 130*dpr;
     for(var x=pad; x<=end; x+=1.5*dpr){
-      var y = mid, la = clamp(1 - norm((x-pad)/span,.22,.40),0,1);
+      var y = mid, la = clamp(1 - norm((x-pad)/span,.26,.46),0,1);
       if(la>.02){
-        var t=(x%period)/period, amp=50*dpr*la;
+        var t=(x%period)/period, amp=52*dpr*la;
         if(t>.30&&t<.34) y = mid - amp*0.16*Math.sin((t-.30)/.04*Math.PI);
         else if(t>=.36&&t<.40) y = mid + amp*0.22;
         else if(t>=.40&&t<.44) y = mid - amp;
@@ -1004,45 +1092,17 @@ footer{
       if(x<=pad) ectx.moveTo(x,y); else ectx.lineTo(x,y);
     }
     ectx.stroke();
-    ectx.globalAlpha = 1;
+    ectx.shadowBlur = 0;
 
-    if(end>pad+2 && hT < 0.02){
-      ectx.globalAlpha = fade;
-      ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,238,242,.9)";
-      ectx.beginPath(); ectx.arc(end,mid,2.8*dpr,0,6.2832); ectx.fill();
-      ectx.globalAlpha = 1;
-    }
-
-    /* ── 파형이 멎은 자리에서 심장이 그려진다 ── */
-    if(hT > 0.001){
-      var sc = Math.min(w*0.34/100, h*0.74/120);
-      var ox = w*0.655 - 50*sc, oy = mid - 60*sc;
-      var upto = Math.floor(HEART_N*hT), seen = 0, tip = null;
-
-      ectx.lineWidth = 1.5*dpr; ectx.lineJoin = "round";
-      ectx.strokeStyle = "rgba(204,222,232,"+(0.36+0.52*hT).toFixed(3)+")";
-      ectx.shadowColor = "rgba(143,186,212,.6)"; ectx.shadowBlur = 18*dpr;
-
-      for(var si=0; si<HEART_PTS.length; si++){
-        var sub = HEART_PTS[si];
-        if(seen >= upto) break;
-        var n = Math.min(sub.length, upto-seen);
-        ectx.beginPath();
-        for(var i=0;i<n;i++){
-          var px = ox + sub[i][0]*sc, py = oy + sub[i][1]*sc;
-          if(i===0) ectx.moveTo(px,py); else ectx.lineTo(px,py);
-          if(seen+i === upto-1) tip = [px,py];
-        }
-        ectx.stroke();
-        seen += sub.length;
-      }
+    /* 진행점 — 파형을 끌고 가는 빛 */
+    if(end>pad+2 && sweep<0.999){
+      ectx.fillStyle = alive>.04 ? "rgba(184,86,58,.95)" : "rgba(232,240,246,.92)";
+      ectx.shadowColor = alive>.04 ? "rgba(184,86,58,.9)" : "rgba(180,215,235,.9)";
+      ectx.shadowBlur = 16*dpr;
+      ectx.beginPath(); ectx.arc(end,mid,3*dpr,0,6.2832); ectx.fill();
       ectx.shadowBlur = 0;
-
-      if(hT < 0.99 && tip){
-        ectx.fillStyle = "rgba(236,244,249,.95)";
-        ectx.beginPath(); ectx.arc(tip[0],tip[1],2.6*dpr,0,6.2832); ectx.fill();
-      }
     }
+    ectx.globalAlpha = 1;
   }
 
   /* ── 워프 ──────────────────────────────── */
@@ -1095,6 +1155,117 @@ footer{
     dotsLit = n;
   }
 
+
+  /* ── 비용 막대 ── */
+  var cbTrack = document.querySelector("[data-cb]"), cbA = 0, cbB = 1;
+  if(cbTrack){
+    var cbd = cbTrack.dataset.cb.split(",").map(Number);
+    cbA = cbd[0]; cbB = cbd[1];
+  }
+
+  /* ── 체온 눈금 ── */
+  var tTicks = [].slice.call(document.querySelectorAll("#tticks b"));
+  var tNote  = document.getElementById("tnote");
+  var T_NOTES = [
+    [ 1,     "체온에서 출발한다." ],
+    [ 0,     "물이 어는 온도를 지난다. 부동액이 없었다면 여기서 결정이 자란다." ],
+    [ -130,  "유리 전이 구간. 조직이 결정을 만들지 않고 유리처럼 굳는다." ],
+    [ -196,  "액체질소가 끓는 온도. 여기서 모든 것이 멈춘다." ]
+  ];
+  var tLast = null;
+  function paintTemp(t){
+    var temp = lerp(36.5,-196,t);
+    for(var i=0;i<tTicks.length;i++){
+      tTicks[i].classList.toggle("lit", temp <= +tTicks[i].dataset.t + 0.4);
+    }
+    var txt = T_NOTES[0][1];
+    for(var j=0;j<T_NOTES.length;j++) if(temp <= T_NOTES[j][0]) txt = T_NOTES[j][1];
+    if(txt !== tLast){ tLast = txt; if(tNote) tNote.textContent = txt; }
+  }
+
+  /* ── WAKE UP · 서리 균열 ────────────────── */
+  var crack = document.getElementById("crack"), cctx = crack && crack.getContext("2d");
+  var wakeBtn = document.getElementById("wakeBtn"), wakeReply = document.getElementById("wakeReply");
+  var cracks = [], crackT = 0, crackRAF = null;
+
+  function seedCracks(){
+    if(!crack) return;
+    var w = crack.width, h = crack.height;
+    var cx = w/2, cy = h/2, R = Math.max(w,h)*0.62;
+    cracks = [];
+    var rnd = function(a,b){ return a + Math.random()*(b-a); };
+    for(var i=0;i<14;i++){
+      var a = (i/14)*Math.PI*2 + rnd(-0.18,0.18);
+      var pts = [[cx,cy]], ang = a, r = 0;
+      var steps = Math.floor(rnd(10,16));
+      for(var k=0;k<steps;k++){
+        r += R/steps * rnd(0.7,1.3);
+        ang += rnd(-0.30,0.30);
+        pts.push([cx+Math.cos(ang)*r, cy+Math.sin(ang)*r]);
+      }
+      cracks.push(pts);
+      /* 곁가지 */
+      if(i%2===0){
+        var from = Math.floor(steps*0.45), br = [pts[from]], ba = ang + rnd(-1.1,1.1), rr = R*0.16;
+        for(var m=0;m<5;m++){
+          ba += rnd(-0.3,0.3); rr += R*0.07;
+          br.push([pts[from][0]+Math.cos(ba)*rr, pts[from][1]+Math.sin(ba)*rr]);
+        }
+        cracks.push(br);
+      }
+    }
+  }
+
+  function drawCracks(t){
+    if(!cctx) return;
+    var w = crack.width, h = crack.height, dpr = window._dpr||1;
+    cctx.clearRect(0,0,w,h);
+    cctx.lineCap = "round"; cctx.lineJoin = "round";
+    for(var i=0;i<cracks.length;i++){
+      var pts = cracks[i];
+      var n = Math.max(2, Math.floor(pts.length * clamp(t*1.25 - (i%5)*0.05, 0, 1)));
+      if(n < 2) continue;
+      cctx.strokeStyle = "rgba(214,232,242,"+(0.20+0.45*t).toFixed(3)+")";
+      cctx.lineWidth = (0.6 + 1.4*(1 - i/cracks.length))*dpr;
+      cctx.shadowColor = "rgba(143,186,212,.55)"; cctx.shadowBlur = 8*dpr;
+      cctx.beginPath();
+      for(var k=0;k<n;k++){ if(k===0) cctx.moveTo(pts[k][0],pts[k][1]); else cctx.lineTo(pts[k][0],pts[k][1]); }
+      cctx.stroke();
+    }
+    cctx.shadowBlur = 0;
+  }
+
+  var WAKE_LINES = [
+    "아무 일도 일어나지 않았다.",
+    "<em>깨우는 기술은 아직 없다.</em>"
+  ];
+  function runWake(){
+    if(!wakeBtn || wakeBtn.disabled) return;
+    wakeBtn.disabled = true;
+    wakeBtn.classList.remove("pulse");
+    wakeBtn.style.transition = "opacity 1.6s";
+    wakeBtn.style.opacity = ".16";
+
+    /* 몇 초간, 아무 일도 없다 */
+    setTimeout(function(){
+      if(crack) crack.classList.add("on");
+      seedCracks();
+      var t0 = performance.now();
+      (function step(now){
+        crackT = Math.min(1,(now-t0)/2600);
+        drawCracks(ease(crackT));
+        if(crackT < 1) crackRAF = requestAnimationFrame(step);
+      })(t0);
+    }, 2200);
+
+    setTimeout(function(){
+      if(wakeReply){
+        wakeReply.innerHTML = WAKE_LINES.join(" ");
+        wakeReply.classList.add("on");
+      }
+    }, 3400);
+  }
+  if(wakeBtn) wakeBtn.addEventListener("click", runWake);
 
   var msEls = document.querySelectorAll("#ms b");
 
@@ -1162,15 +1333,12 @@ footer{
         var ct = act._cnts[c];
         var t2 = ease(norm(p, ct.a, ct.b));
         var val = ct.type==="mag" ? magCurve(t2) : lerp(ct.from, ct.to, t2);
-        if(held && perf.contains(ct.el)) continue;
         var s = fmt(ct.type, val);
         if(s !== ct.last){ ct.last = s; ct.el.textContent = s; }
       }
 
-      var held = perf && perf._held && perf._held();
       for(var f=0;f<act._fills.length;f++){
         var fl = act._fills[f];
-        if(held && perf.contains(fl.el)) continue;
         fl.el.style.width = (norm(p,fl.a,fl.b)*100).toFixed(2)+"%";
       }
       for(var q=0;q<act._ros.length;q++){
@@ -1186,8 +1354,14 @@ footer{
         dm.el.style.opacity = lerp(dm.v0, dm.v1, norm(p,dm.a,dm.b)).toFixed(3);
       }
 
-      if(act.id==="numbers") paintDots(ease(norm(p,.42,.74)));
-      if(act.id==="ice" && p>0.66 && !cmpNudged) nudgeCompare();
+      if(act.id==="numbers"){
+        paintDots(ease(norm(p,.42,.74)));
+        if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
+      }
+      if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
+      if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
+      if(act.id==="cold") paintTemp(ease(norm(p,.06,.52)));
+      if(act.id==="wake" && p>0.72 && wakeBtn && !wakeBtn.disabled) runWake();
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
@@ -1212,86 +1386,50 @@ footer{
 
   function onResize(){
     vh = window.innerHeight;
-    sizeCanvas(ecg); sizeCanvas(warp); seedStars();
+    sizeCanvas(ecg); sizeCanvas(warp); sizeCanvas(crack); seedStars();
+    if(crackT>0){ seedCracks(); drawCracks(ease(crackT)); }
     onScroll();
   }
 
   /* ── 비교 슬라이더 ─────────────────────── */
-  var cmp = document.getElementById("cmp");
-  var cmpHint = document.getElementById("cmpHint");
-  var cmpUsed = false, cmpNudged = false;
-
-  function markCmpUsed(){
-    if(cmpUsed) return;
-    cmpUsed = true;
-    if(cmp) cmp.classList.remove("idle");
-    if(cmpHint) cmpHint.classList.add("done");
-  }
-
-  /* 화면에 들어오면 한 번 좌우로 흔들어 보인다 */
-  function nudgeCompare(){
-    if(cmpNudged || !cmp) return;
-    cmpNudged = true;
-    var t0 = performance.now(), dur = 2000;
-    (function step(now){
-      if(cmpUsed) return;
-      var t = Math.min(1,(now-t0)/dur);
-      var v = 50 + Math.sin(t*Math.PI*2)*15;
-      cmp.style.setProperty("--split", v.toFixed(2)+"%");
-      if(t < 1) requestAnimationFrame(step);
-      else cmp.style.setProperty("--split","50%");
-    })(t0);
-  }
-
-  if(cmp){
-    var dragging = false;
+  /* ── 비교 슬라이더 (스크롤이 굴리고, 원하면 끌 수도 있다) ── */
+  function initCompare(el){
+    if(!el) return null;
+    var st = {el:el, used:false};
     function setSplit(clientX){
-      var b = cmp.getBoundingClientRect();
-      var pct = clamp((clientX-b.left)/b.width,0,1)*100;
-      cmp.style.setProperty("--split", pct.toFixed(2)+"%");
+      var b = el.getBoundingClientRect();
+      el.style.setProperty("--split", (clamp((clientX-b.left)/b.width,0,1)*100).toFixed(2)+"%");
     }
-    cmp.addEventListener("pointerdown", function(e){
-      dragging = true; markCmpUsed(); cmp.setPointerCapture(e.pointerId); setSplit(e.clientX);
+    var dragging = false;
+    el.addEventListener("pointerdown", function(e){
+      dragging = true; st.used = true; el.classList.remove("idle");
+      el.setPointerCapture(e.pointerId); setSplit(e.clientX); e.preventDefault();
     });
-    cmp.addEventListener("pointerenter", markCmpUsed);
-    cmp.addEventListener("pointermove", function(e){ if(dragging) setSplit(e.clientX); });
+    el.addEventListener("pointermove", function(e){ if(dragging) setSplit(e.clientX); });
     ["pointerup","pointercancel"].forEach(function(ev){
-      cmp.addEventListener(ev, function(){ dragging = false; });
+      el.addEventListener(ev, function(){ dragging = false; });
     });
-    cmp.addEventListener("keydown", function(e){
-      var cur = parseFloat(cmp.style.getPropertyValue("--split")) || 50;
-      markCmpUsed();
-      if(e.key==="ArrowLeft"){ cmp.style.setProperty("--split", clamp(cur-4,0,100)+"%"); e.preventDefault(); }
-      if(e.key==="ArrowRight"){ cmp.style.setProperty("--split", clamp(cur+4,0,100)+"%"); e.preventDefault(); }
+    el.addEventListener("keydown", function(e){
+      var cur = parseFloat(el.style.getPropertyValue("--split")) || 50;
+      if(e.key==="ArrowLeft"||e.key==="ArrowRight"){
+        st.used = true; el.classList.remove("idle");
+        el.style.setProperty("--split", clamp(cur + (e.key==="ArrowLeft"?-4:4),0,100)+"%");
+        e.preventDefault();
+      }
     });
-    cmp.tabIndex = 0;
-    cmp.setAttribute("role","slider");
-    cmp.setAttribute("aria-label","얼음 결정과 유리화 비교");
+    el.tabIndex = 0;
+    el.setAttribute("role","slider");
+    return st;
+  }
+  function autoSplit(st, t, from, to){
+    if(!st || st.used) return;
+    st.el.style.setProperty("--split", (lerp(from,to,ease(clamp(t,0,1)))).toFixed(2)+"%");
   }
 
-  /* ── 8시간 게이지 직접 조작 ────────────── */
-  var perf = document.getElementById("perf");
-  if(perf){
-    var fillEl = perf.querySelector(".bar > i");
-    var clockEl = perf.querySelector("[data-c]");
-    var perfDrag = false, perfHeld = false;
-    function setPerf(clientX){
-      var b = perf.querySelector(".bar").getBoundingClientRect();
-      var t = clamp((clientX-b.left)/b.width,0,1);
-      fillEl.style.width = (t*100).toFixed(2)+"%";
-      perf.style.setProperty("--g",(t*100).toFixed(2)+"%");
-      clockEl.textContent = fmt("hour", t*8);
-      perfHeld = true;                       /* 이후 스크롤이 덮어쓰지 않게 */
-    }
-    perf.addEventListener("pointerdown", function(e){
-      perfDrag = true; perf.setPointerCapture(e.pointerId); setPerf(e.clientX); e.preventDefault();
-    });
-    perf.addEventListener("pointermove", function(e){ if(perfDrag) setPerf(e.clientX); });
-    ["pointerup","pointercancel"].forEach(function(ev){
-      perf.addEventListener(ev, function(){ perfDrag = false; });
-    });
-    perf._held = function(){ return perfHeld; };
-  }
+  var cellCmp  = initCompare(document.getElementById("cmp"));
+  var berryCmp = initCompare(document.getElementById("berry"));
+  if(cellCmp)  cellCmp.el.setAttribute("aria-label","얼음 결정과 유리화 비교");
+  if(berryCmp) berryCmp.el.setAttribute("aria-label","냉동 딸기와 해동 딸기 비교");
 
   /* ── 마지막 질문 ───────────────────────── */
   var ansEl = document.getElementById("ans"), discEl = document.getElementById("disc");
