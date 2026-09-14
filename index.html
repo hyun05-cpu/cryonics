@@ -309,44 +309,46 @@ img{display:block;max-width:100%}
    혈관 관류
    ───────────────────────────────────────────── */
 .perfuse{
-  position:absolute;inset:0;pointer-events:none;--pf:0%;
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+  --pf:0%;--pfn:0;
   mix-blend-mode:screen;
 }
-.perfuse .pf-fill{
-  position:absolute;inset:0;
-  background:linear-gradient(100deg,
-    rgba(122,182,214,.42) 0%,
-    rgba(158,206,230,.26) 55%,
-    rgba(198,230,244,.12) 100%);
-  -webkit-mask-image:linear-gradient(95deg,
-    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.35) calc(var(--pf) - 5%), transparent var(--pf));
-  mask-image:linear-gradient(95deg,
-    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.35) calc(var(--pf) - 5%), transparent var(--pf));
+/* 혈관이 좌하 → 우상으로 흐르므로 그 축에 맞춰 띠를 눕힌다 */
+.pf-band{
+  position:absolute;left:-8%;top:43%;height:24%;
+  width:calc(124% * var(--pfn));
+  transform:rotate(-17deg);transform-origin:0 50%;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent),
+                     linear-gradient(90deg,#000 88%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent),
+             linear-gradient(90deg,#000 88%,transparent);
+  mask-composite:intersect;
+  background:linear-gradient(90deg,
+    rgba(138,196,228,.34) 0%,
+    rgba(176,218,240,.22) 60%,
+    rgba(210,238,250,.10) 100%);
+  filter:blur(6px);
+}
+.pf-stripes{
+  position:absolute;inset:0;width:300%;
+  background:repeating-linear-gradient(88deg,
+    rgba(238,252,255,0) 0px,
+    rgba(238,252,255,.30) 22px,
+    rgba(238,252,255,0) 62px);
+  animation:flow 2.8s linear infinite;
   filter:blur(3px);
 }
-.perfuse .pf-flow{
-  position:absolute;inset:-10% -60% -10% -10%;
-  background:repeating-linear-gradient(101deg,
-    rgba(232,248,255,0) 0px,
-    rgba(232,248,255,.20) 34px,
-    rgba(232,248,255,0) 88px,
-    rgba(232,248,255,0) 150px);
-  -webkit-mask-image:linear-gradient(95deg,
-    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.3) calc(var(--pf) - 4%), transparent var(--pf));
-  mask-image:linear-gradient(95deg,
-    #000 0%, #000 calc(var(--pf) - 16%), rgba(0,0,0,.3) calc(var(--pf) - 4%), transparent var(--pf));
-  filter:blur(7px);
-  animation:flow 5.5s linear infinite;
-}
-@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(150px)} }
-.perfuse .pf-edge{
-  position:absolute;top:-12%;bottom:-12%;left:var(--pf);width:26vw;
-  transform:translateX(-62%) rotate(4deg);
-  background:radial-gradient(60% 50% at 62% 50%,
-    rgba(232,248,255,.55) 0%,
-    rgba(180,220,242,.22) 42%,
-    rgba(180,220,242,0) 72%);
-  filter:blur(26px);opacity:.85;
+@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(62px)} }
+.pf-head{
+  position:absolute;right:-6%;top:50%;
+  width:22%;height:230%;transform:translateY(-50%);
+  background:radial-gradient(closest-side,
+    rgba(240,252,255,.65),
+    rgba(180,222,244,.22) 55%,
+    rgba(180,222,244,0) 100%);
+  filter:blur(12px);
 }
 
 /* ─────────────────────────────────────────────
@@ -366,9 +368,18 @@ img{display:block;max-width:100%}
   font-style:normal;font-size:clamp(12.5px,1.25vw,14.5px);
   letter-spacing:.01em;color:var(--slate-lt);text-align:left;
 }
+.cb-legend b u s{
+  text-decoration:none;font-size:.72em;font-weight:500;
+  color:var(--slate);letter-spacing:.02em;margin-left:5px;
+}
 .cb-legend b u{
   text-decoration:none;font-size:clamp(14px,1.45vw,17px);font-weight:600;
   color:#E8EEF2;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+  text-align:right;
+}
+.cb-legend b u s{
+  display:block;text-decoration:none;font-size:11px;font-weight:500;
+  letter-spacing:.06em;color:var(--slate);margin-top:3px;
 }
 .cb-legend b em{width:14px;height:2px}
 .cb-legend b.a em{background:var(--frost);box-shadow:0 0 10px rgba(143,186,212,.8)}
@@ -407,13 +418,14 @@ img{display:block;max-width:100%}
    ───────────────────────────────────────────── */
 .monitor{
   position:absolute;left:var(--gut);top:clamp(72px,11vh,112px);z-index:6;
-  font-size:clamp(14px,1.5vw,18px);letter-spacing:.16em;color:var(--frost);font-weight:600;
-  font-variant-numeric:tabular-nums;line-height:1.75;
-  text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 24px rgba(143,186,212,.35);
+  font-size:clamp(11px,1.05vw,12.5px);letter-spacing:.2em;
+  color:rgba(143,186,212,.78);font-weight:500;
+  font-variant-numeric:tabular-nums;line-height:1.8;
+  text-shadow:0 1px 12px rgba(4,7,10,.98);
 }
 .monitor span{
-  display:block;color:#CFDCE4;letter-spacing:.06em;font-weight:500;
-  font-size:clamp(12.5px,1.25vw,15px);margin-top:4px;
+  display:block;color:rgba(190,206,215,.62);letter-spacing:.09em;font-weight:400;
+  font-size:clamp(10.5px,.98vw,11.5px);margin-top:2px;
 }
 
 /* ─────────────────────────────────────────────
@@ -552,13 +564,24 @@ img{display:block;max-width:100%}
 .wake-hint.gone{opacity:0}
 
 .wake-reply{
-  margin:46px auto 0;max-width:34ch;min-height:6em;
+  margin:46px auto 0;max-width:36ch;min-height:7em;
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(20px,2.7vw,32px);line-height:1.6;color:#fff;
-  opacity:0;transition:opacity 1.2s ease;text-wrap:balance;
+  font-size:clamp(19px,2.4vw,29px);line-height:1.55;color:#fff;
+  opacity:0;transition:opacity .9s ease;text-wrap:balance;
 }
 .wake-reply.on{opacity:1}
-.wake-reply em{font-style:normal;color:var(--frost);display:block;margin-top:18px}
+.wake-reply em{
+  font-style:normal;color:#DCEEF9;display:block;margin-top:14px;
+  font-size:1.5em;line-height:1.3;letter-spacing:-.015em;
+  opacity:0;transform:translateY(10px);
+  animation:wakeline 1.5s .55s cubic-bezier(.16,1,.3,1) forwards,
+            wakeglow 3.4s 2s ease-in-out infinite;
+}
+@keyframes wakeline{ to{opacity:1;transform:none} }
+@keyframes wakeglow{
+  0%,100%{text-shadow:0 0 16px rgba(143,186,212,.35)}
+  50%{text-shadow:0 0 30px rgba(255,255,255,.4),0 0 70px rgba(143,186,212,.9)}
+}
 
 /* 서리 균열 */
 #crack{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;opacity:0;transition:opacity .8s}
@@ -636,7 +659,7 @@ footer{
 .src-thumb{position:relative;overflow:hidden;min-height:150px;background:#04070A}
 .src-thumb img{
   width:100%;height:100%;object-fit:cover;
-  filter:grayscale(.35) brightness(.44) contrast(1.05);
+  filter:grayscale(.62) brightness(.40) contrast(1.06) saturate(.7);
   transform:scale(1.04);
   transition:filter .6s,transform .8s cubic-bezier(.16,1,.3,1);
 }
@@ -644,7 +667,7 @@ footer{
   content:"";position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(4,7,10,.25),rgba(4,7,10,.85));
 }
-.src-card:hover .src-thumb img{filter:grayscale(.1) brightness(.62) contrast(1.05);transform:scale(1.09)}
+.src-card:hover .src-thumb img{filter:grayscale(.25) brightness(.58) contrast(1.06) saturate(.9);transform:scale(1.09)}
 
 .src-body{
   display:flex;flex-direction:column;justify-content:center;
@@ -770,11 +793,11 @@ footer{
       <div class="costbar" id="costbar">
         <div class="cb-track" data-cb="0.05,0.12"><i class="cb-a"></i><i class="cb-b"></i></div>
         <div class="cb-legend">
-          <b class="a"><em></em><i>안정화·냉동 처리</i><u>약 5,800만원</u></b>
-          <b class="b"><em></em><i>무기한 보관</i><u>약 1억 4,400만원</u></b>
+          <b class="a"><em></em><i>안정화·냉동 처리</i><u>약 5,800만원 <s>6만 AUD</s></u></b>
+          <b class="b"><em></em><i>무기한 보관</i><u>약 1억 4,400만원 <s>15만 AUD</s></u></b>
         </div>
       </div>
-      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러. 연회비 350호주달러는 별도다.</p>
+      <p class="figsub">호주 서던 크라이오닉스 기준 21만 호주달러(약 2억원). 연회비 350호주달러(약 34만원)는 별도다.</p>
     </div>
 
     <div class="beat centre" data-band="0.23,0.34">
@@ -833,7 +856,12 @@ footer{
   <div class="stage">
     <div class="plate">
       <img src="./03-vessel.png" alt="혈관 내부로 냉동보호제가 퍼져 나가는 메디컬 일러스트" data-k="1.16,1.0" style="--focal:42% 50%" loading="lazy">
-      <div class="perfuse" id="perfuse" data-pf="0.24,0.70"><div class="pf-fill"></div><div class="pf-flow"></div><div class="pf-edge"></div></div>
+      <div class="perfuse" id="perfuse" data-pf="0.24,0.70">
+        <div class="pf-band">
+          <div class="pf-stripes"></div>
+          <span class="pf-head"></span>
+        </div>
+      </div>
     </div>
     <div class="scrim bottom"></div>
 
@@ -969,7 +997,7 @@ footer{
 
     <div class="beat lower" data-band="0.70,0.98">
       <p class="line">이 온도에서 시간은 사실상 멈춘다.</p>
-      <p class="note">화학반응이 거의 일어나지 않는다. 100년을 두든 1,000년을 두든 상태는 같다. 전기도 필요 없다. 증발한 질소만 채워 넣으면 된다.</p>
+      <p class="note br">화학반응이 거의 일어나지 않는다.<br>100년을 두든 1,000년을 두든 상태는 같다.<br>전기도 필요 없다. 증발한 질소만 채워 넣으면 된다.</p>
     </div>
   </div>
 </section>
@@ -1118,7 +1146,7 @@ footer{
     </div>
 
     <a class="src-card" href="https://view.asiae.co.kr/article/2026091408461986576" target="_blank" rel="noopener">
-      <span class="src-thumb"><img src="./05-inverted.png" alt="" aria-hidden="true" loading="lazy"></span>
+      <span class="src-thumb"><img src="./08-thumb.jpeg" alt="" aria-hidden="true" loading="lazy"></span>
       <span class="src-body">
         <span class="src-title">2억 내고 ‘250년 뒤에 깨워줘’<br>…대기자만 4000명 몰린 ‘냉동인간’</span>
         <span class="src-go"><b>기사 전문 보기</b><i></i></span>
@@ -1498,14 +1526,14 @@ footer{
         drawCracks(ease(crackT));
         if(crackT < 1) crackRAF = requestAnimationFrame(step);
       })(t0);
-    }, 2200);
+    }, 650);
 
     setTimeout(function(){
       if(wakeReply){
-        wakeReply.innerHTML = WAKE_LINES.join(" ");
+        wakeReply.innerHTML = WAKE_LINES.join("");
         wakeReply.classList.add("on");
       }
-    }, 3400);
+    }, 1250);
   }
   if(wakeBtn) wakeBtn.addEventListener("click", runWake);
 
@@ -1613,7 +1641,9 @@ footer{
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
       }
       if(act.id==="perfusion" && perfuse){
-        perfuse.style.setProperty("--pf", (ease(norm(p,pfA,pfB))*100).toFixed(2)+"%");
+        var pv = ease(norm(p,pfA,pfB));
+        perfuse.style.setProperty("--pf", (pv*100).toFixed(2)+"%");
+        perfuse.style.setProperty("--pfn", pv.toFixed(4));
       }
       if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
@@ -1693,7 +1723,7 @@ footer{
   var ansEl = document.getElementById("ans"), discEl = document.getElementById("disc");
   var TEXT = {
     yes: "지금 기술로는 되살릴 방법이 없다는 것을 알면서도,<br><em>가능성이 0은 아니라는 쪽</em>에 걸겠다는 선택입니다.<br>계약자 4,000여 명이 같은 판단을 했습니다.",
-    no:  "2억원과 시신을 <em>검증된 적 없는 전제</em>에<br>맡기지 않겠다는 선택입니다.<br>과학계 다수도 같은 자리에 서 있습니다."
+    no:  "2억원과 시신을 <em>검증된 적 없는 전제</em>에 맡기지 않겠다는 선택입니다.<br>과학계 다수도 같은 자리에 서 있습니다."
   };
   [].slice.call(document.querySelectorAll(".choice")).forEach(function(btn){
     btn.addEventListener("click", function(){
