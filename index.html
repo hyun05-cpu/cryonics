@@ -310,25 +310,26 @@ img{display:block;max-width:100%}
    ───────────────────────────────────────────── */
 .perfuse{
   position:absolute;inset:0;overflow:hidden;pointer-events:none;--pf:0%;
-  -webkit-mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 15%),rgba(0,0,0,.4) calc(var(--pf) - 4%),transparent var(--pf));
-  mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 15%),rgba(0,0,0,.4) calc(var(--pf) - 4%),transparent var(--pf));
+  -webkit-mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 9%),rgba(0,0,0,.45) calc(var(--pf) - 2.5%),transparent var(--pf));
+  mask-image:linear-gradient(96deg,#000 0%,#000 calc(var(--pf) - 9%),rgba(0,0,0,.45) calc(var(--pf) - 2.5%),transparent var(--pf));
 }
 /* 같은 혈관 이미지를 한랭색으로 착색해 겹친다 — 형태를 정확히 따라간다 */
 .pf-img{
   width:100%;height:100%;object-fit:cover;object-position:var(--focal,50% 50%);
-  filter:grayscale(1) brightness(1.5) sepia(1) hue-rotate(168deg) saturate(3.2) contrast(.96);
-  mix-blend-mode:screen;opacity:.55;
+  /* 색을 입히지 않는다 — 혈색만 빼고 창백하게 만든다 */
+  filter:saturate(.06) brightness(1.18) contrast(1.02);
+  opacity:1;
 }
 .pf-sheen{
   position:absolute;inset:0;
   background:repeating-linear-gradient(96deg,
-    rgba(238,252,255,0) 0px,
-    rgba(238,252,255,.16) 26px,
-    rgba(238,252,255,0) 74px);
-  mix-blend-mode:screen;filter:blur(6px);
-  animation:flow 3.4s linear infinite;
+    rgba(226,244,252,0) 0px,
+    rgba(226,244,252,.10) 30px,
+    rgba(226,244,252,0) 82px);
+  mix-blend-mode:screen;filter:blur(9px);opacity:.75;
+  animation:flow 3.6s linear infinite;
 }
-@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(74px)} }
+@keyframes flow{ from{transform:translateX(0)} to{transform:translateX(82px)} }
 
 /* ─────────────────────────────────────────────
    비용 분해 막대
