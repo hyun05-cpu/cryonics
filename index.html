@@ -222,7 +222,15 @@ img{display:block;max-width:100%}
     white-space:normal;font-size:10px;bottom:12px;
   }
   .cue{bottom:clamp(60px,9vh,84px)}
+  .title{font-size:clamp(38px,8vw,66px);line-height:1.1}
+  .deck{font-size:15px;line-height:1.7;margin-top:20px;max-width:100%}
+  #cover .cover-wrap{padding-bottom:92px}
 }
+/* 부모 기사에 얹혔을 때: 브라우저 자체 패닝을 끈다.
+   pan-y 가 남아 있으면 iframe 문서가 독자적으로 스크롤돼
+   부모가 보내는 진행도와 충돌한다. scrollTo 는 그대로 작동한다. */
+html.hosted,html.hosted body{touch-action:none!important;overscroll-behavior:none!important}
+html.hosted .gauge.live,html.hosted .compare{touch-action:none!important}
 
 /* ─────────────────────────────────────────────
    심박 / ECG
@@ -1783,6 +1791,7 @@ addEventListener("error", function(e){
 
     if(!hostLinked){
       hostLinked = true;
+      document.documentElement.classList.add("hosted");
       try{ e.source.postMessage({type:"cryo:ack"}, e.origin); }catch(err){}
     }
 
@@ -1803,22 +1812,30 @@ addEventListener("error", function(e){
       try{ parent.postMessage({type:"cryo:wheel",deltaY:e.deltaY,deltaMode:e.deltaMode||0}, "*"); }catch(err){}
     }, {passive:false});
 
-    var _ty=null, _blocked=false;
+    var _ty=null, _sx=0, _sy=0, _int=false, _axis=null;
     window.addEventListener("touchstart", function(e){
       if(!e.touches || !e.touches.length) return;
       var t=e.target;
-      _blocked=!!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
-      _ty=e.touches[0].clientY;
+      _int=!!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
+      _sx=e.touches[0].clientX; _sy=e.touches[0].clientY;
+      _ty=_sy; _axis=null;
     }, {passive:true});
     window.addEventListener("touchmove", function(e){
       if(!hostLinked) return;          /* 부모가 없으면 내 스크롤을 그대로 쓴다 */
-      if(_blocked || _ty===null || !e.touches || !e.touches.length) return;
-      var y=e.touches[0].clientY, dy=_ty-y; _ty=y;
+      if(_ty===null || !e.touches || !e.touches.length) return;
+      var x=e.touches[0].clientX, y=e.touches[0].clientY;
+      if(_axis===null){
+        var ax=Math.abs(x-_sx), ay=Math.abs(y-_sy);
+        if(ax<6 && ay<6) return;       /* 아직 방향을 판단할 만큼 안 움직였다 */
+        _axis=(_int && ax>ay) ? "x" : "y";
+      }
+      var dy=_ty-y; _ty=y;
+      if(_axis==="x") return;          /* 슬라이더 가로 드래그. 요소에 맡긴다 */
       if(Math.abs(dy)<0.2) return;
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:touchscroll",deltaY:dy}, "*"); }catch(err){}
     }, {passive:false});
-    function _te(){ _ty=null; _blocked=false; }
+    function _te(){ _ty=null; _int=false; _axis=null; }
     window.addEventListener("touchend",_te,{passive:true});
     window.addEventListener("touchcancel",_te,{passive:true});
   }
