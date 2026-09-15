@@ -1184,7 +1184,7 @@ footer{
 (function(){
   "use strict";
 
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduced = false; /* embedded visual-news: keep scroll animation active on mobile */
 
   var acts   = [].slice.call(document.querySelectorAll(".act"));
   var railFill = document.querySelector("#rail > i");
@@ -1665,7 +1665,6 @@ footer{
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
       if(act.id==="cold") paintTemp(ease(norm(p,.06,.52)));
       if(act.id==="odds") checkOdds(p);
-      if(act.id==="wake" && p>0.52 && wakeBtn && !wakeBtn.disabled) runWake();
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
@@ -1757,69 +1756,46 @@ footer{
     try{ parent.postMessage({type:"cryo:height", height:document.documentElement.scrollHeight}, "*"); }catch(err){}
   }
 
-  /* ── 부모 기사 단일 스크롤 연동 ─────────── */
+  /* ── 아시아경제 부모 기사 단일 스크롤 연동 ── */
   function trustedParentOrigin(origin){
     return /^https:\/\/([a-z0-9-]+\.)?asiae\.co\.kr$/i.test(origin);
   }
 
-  /* 부모 기사 스크롤 진행률을 iframe 내부 스크롤 위치로 변환 */
   window.addEventListener("message", function(e){
-    if(!trustedParentOrigin(e.origin)) return;
-    if(!e.data) return;
-
+    if(!trustedParentOrigin(e.origin) || !e.data) return;
     if(e.data.type === "cryo:progress"){
       var p = clamp(Number(e.data.progress) || 0, 0, 1);
       var maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      var targetY = maxScroll * p;
-
-      if(Math.abs(window.scrollY - targetY) > 0.5){
-        window.scrollTo(0, targetY);
-      }else{
-        onScroll();
-      }
+      var y = maxScroll * p;
+      window.scrollTo(0, y);
+      onScroll();
     }
-
     if(e.data.type === "cryo:requestHeight") notifyHeight();
   });
 
-  /* iframe 위에서 굴린 휠을 부모 기사 스크롤로 전달 */
   if(window.parent !== window){
     window.addEventListener("wheel", function(e){
       e.preventDefault();
-      try{
-        parent.postMessage({
-          type:"cryo:wheel",
-          deltaY:e.deltaY,
-          deltaMode:e.deltaMode || 0
-        }, "*");
-      }catch(err){}
+      try{ parent.postMessage({type:"cryo:wheel",deltaY:e.deltaY,deltaMode:e.deltaMode||0}, "*"); }catch(err){}
     }, {passive:false});
 
-    var cryoTouchY = null;
-    var cryoTouchBlocked = false;
-
+    var _ty=null, _blocked=false;
     window.addEventListener("touchstart", function(e){
       if(!e.touches || !e.touches.length) return;
-      var t = e.target;
-      cryoTouchBlocked = !!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
-      cryoTouchY = e.touches[0].clientY;
+      var t=e.target;
+      _blocked=!!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
+      _ty=e.touches[0].clientY;
     }, {passive:true});
-
     window.addEventListener("touchmove", function(e){
-      if(cryoTouchBlocked || cryoTouchY === null || !e.touches || !e.touches.length) return;
-      var y = e.touches[0].clientY;
-      var dy = cryoTouchY - y;
-      cryoTouchY = y;
-      if(Math.abs(dy) < 0.5) return;
+      if(_blocked || _ty===null || !e.touches || !e.touches.length) return;
+      var y=e.touches[0].clientY, dy=_ty-y; _ty=y;
+      if(Math.abs(dy)<0.2) return;
       e.preventDefault();
-      try{
-        parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*");
-      }catch(err){}
+      try{ parent.postMessage({type:"cryo:touchscroll",deltaY:dy}, "*"); }catch(err){}
     }, {passive:false});
-
-    function endTouch(){ cryoTouchY = null; cryoTouchBlocked = false; }
-    window.addEventListener("touchend", endTouch, {passive:true});
-    window.addEventListener("touchcancel", endTouch, {passive:true});
+    function _te(){ _ty=null; _blocked=false; }
+    window.addEventListener("touchend",_te,{passive:true});
+    window.addEventListener("touchcancel",_te,{passive:true});
   }
 
   /* ── init ──────────────────────────────── */
