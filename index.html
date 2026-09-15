@@ -740,9 +740,12 @@ footer{
   .milestones{gap:10px;font-size:12px;letter-spacing:.1em}
 }
 @media (max-width:720px){
-  .stage{height:100dvh;height:100svh}
-  .compare .handle::after{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 18px rgba(143,186,212,.35)}
-  .frostlayer{filter:none}
+  .stage{height:100svh}
+  .compare .handle::after{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 14px rgba(143,186,212,.30)}
+  .frostlayer{filter:none;mix-blend-mode:normal}
+  .dots i{transition:none}
+  .plate img{will-change:auto}
+  .beat{will-change:auto}
   #rail{height:1px}
 }
 
@@ -1186,7 +1189,7 @@ footer{
 (function(){
   "use strict";
 
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduced = false; /* 비주얼뉴스: iOS 동작 줄이기 설정과 무관하게 스크롤 연출 유지 */
 
   var acts   = [].slice.call(document.querySelectorAll(".act"));
   var railFill = document.querySelector("#rail > i");
@@ -1574,26 +1577,35 @@ footer{
   var msEls = document.querySelectorAll("#ms b");
 
   /* ── 메인 루프 ─────────────────────────── */
-  var vh = window.innerHeight, ticking = false;
+  var vh = window.innerHeight, ticking = false, externalMode = false, externalProgress = 0;
 
   function frame(){
     ticking = false;
     var doc = document.documentElement;
-    var total = doc.scrollHeight - vh;
-    if(railFill) railFill.style.width = (total>0 ? clamp(window.scrollY/total,0,1)*100 : 0) + "%";
+    var total = Math.max(1, doc.scrollHeight - vh);
+    var virtualY = externalMode ? externalProgress * total : window.scrollY;
+    if(railFill) railFill.style.width = (externalMode ? externalProgress*100 : clamp(window.scrollY/total,0,1)*100) + "%";
 
     for(var i=0;i<acts.length;i++){
       var act = acts[i];
-      var r = act.getBoundingClientRect();
-      var live = r.top < vh && r.bottom > 0;
+      var top, height, bottom;
+      if(externalMode){
+        top = act.offsetTop - virtualY;
+        height = act.offsetHeight;
+        bottom = top + height;
+      }else{
+        var r = act.getBoundingClientRect();
+        top = r.top; height = r.height; bottom = r.bottom;
+      }
+      var live = top < vh && bottom > 0;
       if(!live){
         if(act._was){ act._was=false; }
         continue;
       }
       act._was = true;
 
-      var span = r.height - vh;
-      var p = span>0 ? clamp(-r.top/span,0,1) : (r.top<=0?1:0);
+      var span = height - vh;
+      var p = span>0 ? clamp(-top/span,0,1) : (top<=0?1:0);
 
       /* 텍스트: 한 번에 하나 */
       for(var j=0;j<act._beats.length;j++){
@@ -1609,7 +1621,6 @@ footer{
         bt.el.classList.toggle("on", v>0.55);
       }
 
-      if(reduced) continue;
 
       /* 이미지 */
       for(var m=0;m<act._imgs.length;m++){
@@ -1768,15 +1779,9 @@ footer{
     if(!e.data) return;
 
     if(e.data.type === "cryo:progress"){
-      var p = clamp(Number(e.data.progress) || 0, 0, 1);
-      var maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      var targetY = maxScroll * p;
-
-      if(Math.abs(window.scrollY - targetY) > 0.5){
-        window.scrollTo(0, targetY);
-      }else{
-        onScroll();
-      }
+      externalMode = true;
+      externalProgress = clamp(Number(e.data.progress) || 0, 0, 1);
+      onScroll();
     }
 
     if(e.data.type === "cryo:requestHeight") notifyHeight();
@@ -1799,13 +1804,14 @@ footer{
     var cryoTouchBlocked = false;
     var cryoTouchPending = 0;
     var cryoTouchRAF = 0;
+    var cryoLastTouchT = 0;
 
     function flushTouch(){
       cryoTouchRAF = 0;
       var dy = cryoTouchPending;
       cryoTouchPending = 0;
       if(Math.abs(dy) < 0.1) return;
-      try{ parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0, source:"touch"}, "*"); }catch(err){}
+      try{ parent.postMessage({type:"cryo:touchscroll", deltaY:dy, t:performance.now()}, "*"); }catch(err){}
     }
 
     window.addEventListener("touchstart", function(e){
@@ -1814,6 +1820,10 @@ footer{
       cryoTouchBlocked = !!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
       cryoTouchY = e.touches[0].clientY;
       cryoTouchPending = 0;
+      cryoLastTouchT = performance.now();
+      if(!cryoTouchBlocked){
+        try{ parent.postMessage({type:"cryo:touchstart"}, "*"); }catch(err){}
+      }
     }, {passive:true});
 
     window.addEventListener("touchmove", function(e){
@@ -1821,15 +1831,19 @@ footer{
       var y = e.touches[0].clientY;
       var dy = cryoTouchY - y;
       cryoTouchY = y;
-      if(Math.abs(dy) < 0.25) return;
+      if(Math.abs(dy) < 0.15) return;
       e.preventDefault();
       cryoTouchPending += dy;
+      cryoLastTouchT = performance.now();
       if(!cryoTouchRAF) cryoTouchRAF = requestAnimationFrame(flushTouch);
     }, {passive:false});
 
     function endTouch(){
       if(cryoTouchRAF){ cancelAnimationFrame(cryoTouchRAF); cryoTouchRAF=0; }
       flushTouch();
+      if(!cryoTouchBlocked){
+        try{ parent.postMessage({type:"cryo:touchend", t:performance.now()}, "*"); }catch(err){}
+      }
       cryoTouchY = null; cryoTouchBlocked = false;
     }
     window.addEventListener("touchend", endTouch, {passive:true});
@@ -1837,7 +1851,7 @@ footer{
   }
 
   /* ── init ──────────────────────────────── */
-  window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("scroll", function(){ if(window.parent===window) externalMode=false; onScroll(); }, {passive:true});
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
   window.addEventListener("load", function(){ onResize(); notifyHeight(); });
