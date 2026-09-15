@@ -779,6 +779,20 @@ footer{
 }
 </style>
 <script>document.documentElement.className="js";</script>
+<script>
+/* 이미지 경로 보험.
+   ./00-cover.png 이 없으면 assets/img/00-cover.jpg 를 한 번 더 시도한다.
+   두 경로 중 어느 쪽에 파일을 올리든 화면이 비지 않는다. 에러가 날 때만 동작. */
+addEventListener("error", function(e){
+  var el = e.target;
+  if(!el || el.tagName !== "IMG" || el.dataset.fb) return;
+  el.dataset.fb = "1";
+  var src = el.getAttribute("src") || "";
+  var name = src.split("/").pop().replace(/\.(png|jpe?g|webp)$/i, "");
+  if(!name) return;
+  el.src = /assets\/img\//.test(src) ? "./" + name + ".png" : "assets/img/" + name + ".jpg";
+}, true);
+</script>
 </head>
 
 <body>
@@ -1757,24 +1771,34 @@ footer{
   }
 
   /* ── 아시아경제 부모 기사 단일 스크롤 연동 ── */
-  function trustedParentOrigin(origin){
-    return /^https:\/\/([a-z0-9-]+\.)?asiae\.co\.kr$/i.test(origin);
-  }
+  /* 부모가 실제로 응답한다는 것이 확인되기 전에는 hostLinked=false.
+     이 플래그가 false인 동안에는 절대 자기 스크롤을 막지 않는다.
+     (네이버·다음 재배포, 직접 접속, 로컬 테스트에서 화면이 멈추던 원인) */
+  var hostLinked = false;
 
   window.addEventListener("message", function(e){
-    if(!trustedParentOrigin(e.origin) || !e.data) return;
-    if(e.data.type === "cryo:progress"){
+    if(!e.data) return;
+    var t = e.data.type;
+    if(t !== "cryo:host" && t !== "cryo:progress" && t !== "cryo:requestHeight") return;
+
+    if(!hostLinked){
+      hostLinked = true;
+      try{ e.source.postMessage({type:"cryo:ack"}, e.origin); }catch(err){}
+    }
+
+    if(t === "cryo:progress"){
       var p = clamp(Number(e.data.progress) || 0, 0, 1);
       var maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
       var y = maxScroll * p;
       window.scrollTo(0, y);
       onScroll();
     }
-    if(e.data.type === "cryo:requestHeight") notifyHeight();
+    if(t === "cryo:requestHeight") notifyHeight();
   });
 
   if(window.parent !== window){
     window.addEventListener("wheel", function(e){
+      if(!hostLinked) return;          /* 부모가 없으면 내 스크롤을 그대로 쓴다 */
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:wheel",deltaY:e.deltaY,deltaMode:e.deltaMode||0}, "*"); }catch(err){}
     }, {passive:false});
@@ -1787,6 +1811,7 @@ footer{
       _ty=e.touches[0].clientY;
     }, {passive:true});
     window.addEventListener("touchmove", function(e){
+      if(!hostLinked) return;          /* 부모가 없으면 내 스크롤을 그대로 쓴다 */
       if(_blocked || _ty===null || !e.touches || !e.touches.length) return;
       var y=e.touches[0].clientY, dy=_ty-y; _ty=y;
       if(Math.abs(dy)<0.2) return;
