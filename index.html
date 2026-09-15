@@ -739,26 +739,21 @@ footer{
   .readout{top:78px}
   .milestones{gap:10px;font-size:12px;letter-spacing:.1em}
 }
-@media (max-width:720px){
-  .stage{height:100svh}
-  .compare .handle::after{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 14px rgba(143,186,212,.30)}
-  .frostlayer{filter:none;mix-blend-mode:normal}
-  .dots i{transition:none}
-  .plate img{will-change:auto}
-  .beat{will-change:auto}
-  #rail{height:1px}
-}
 
 /* ─────────────────────────────────────────────
    reduced motion — 스크롤 연출을 끄고 읽기 문서로 전환
    ───────────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){
-  /* iOS의 '동작 줄이기'에서도 스크롤 스토리 구조는 유지한다.
-     반복/장식 애니메이션만 줄이고 장면 고정과 진행 애니메이션은 살린다. */
+  .act{height:auto !important}
+  .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
+  .plate{position:relative;inset:auto;height:52vh;margin-bottom:30px}
+  .plate img{transform:none !important;opacity:1 !important}
+  .scrim,.frostlayer,#warp,#ecg,.cue{display:none}
+  .beat{position:static !important;opacity:1 !important;transform:none !important;
+        max-width:60ch;margin:0 0 46px;pointer-events:auto}
+  .beat.centre{text-align:left}
+  .readout{position:static;opacity:1 !important;margin-bottom:18px}
   .title,.brand,.deck{animation:none;opacity:1}
-  .cue i,.line em.big,.dots i.kr,.dots i.kr::after,.legend b.kr::before,
-  .compare.idle .handle::after,.wake-btn::after,.wake-btn.pulse span{animation:none !important}
-  .plate img,.beat,.readout,.milestones,.frostlayer{transition:none !important}
 }
 
 #cover .scrim.full{
@@ -1189,7 +1184,7 @@ footer{
 (function(){
   "use strict";
 
-  var reduced = false; /* 비주얼뉴스: iOS 동작 줄이기 설정과 무관하게 스크롤 연출 유지 */
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var acts   = [].slice.call(document.querySelectorAll(".act"));
   var railFill = document.querySelector("#rail > i");
@@ -1321,8 +1316,7 @@ footer{
   var warp = document.getElementById("warp"), wctx = warp && warp.getContext("2d"), stars = [];
   function seedStars(){
     stars = [];
-    var starCount = window.innerWidth <= 720 ? 110 : 230;
-    for(var i=0;i<starCount;i++){
+    for(var i=0;i<230;i++){
       stars.push({
         a: Math.random()*6.2832,
         r: Math.random(),
@@ -1577,35 +1571,26 @@ footer{
   var msEls = document.querySelectorAll("#ms b");
 
   /* ── 메인 루프 ─────────────────────────── */
-  var vh = window.innerHeight, ticking = false, externalMode = false, externalProgress = 0;
+  var vh = window.innerHeight, ticking = false;
 
   function frame(){
     ticking = false;
     var doc = document.documentElement;
-    var total = Math.max(1, doc.scrollHeight - vh);
-    var virtualY = externalMode ? externalProgress * total : window.scrollY;
-    if(railFill) railFill.style.width = (externalMode ? externalProgress*100 : clamp(window.scrollY/total,0,1)*100) + "%";
+    var total = doc.scrollHeight - vh;
+    if(railFill) railFill.style.width = (total>0 ? clamp(window.scrollY/total,0,1)*100 : 0) + "%";
 
     for(var i=0;i<acts.length;i++){
       var act = acts[i];
-      var top, height, bottom;
-      if(externalMode){
-        top = act.offsetTop - virtualY;
-        height = act.offsetHeight;
-        bottom = top + height;
-      }else{
-        var r = act.getBoundingClientRect();
-        top = r.top; height = r.height; bottom = r.bottom;
-      }
-      var live = top < vh && bottom > 0;
+      var r = act.getBoundingClientRect();
+      var live = r.top < vh && r.bottom > 0;
       if(!live){
         if(act._was){ act._was=false; }
         continue;
       }
       act._was = true;
 
-      var span = height - vh;
-      var p = span>0 ? clamp(-top/span,0,1) : (top<=0?1:0);
+      var span = r.height - vh;
+      var p = span>0 ? clamp(-r.top/span,0,1) : (r.top<=0?1:0);
 
       /* 텍스트: 한 번에 하나 */
       for(var j=0;j<act._beats.length;j++){
@@ -1621,6 +1606,7 @@ footer{
         bt.el.classList.toggle("on", v>0.55);
       }
 
+      if(reduced) continue;
 
       /* 이미지 */
       for(var m=0;m<act._imgs.length;m++){
@@ -1692,7 +1678,7 @@ footer{
 
   function sizeCanvas(cv){
     if(!cv) return;
-    var dpr = Math.min(window.devicePixelRatio||1, window.innerWidth<=720 ? 1.25 : 2);
+    var dpr = Math.min(window.devicePixelRatio||1, 2);
     window._dpr = dpr;
     var b = cv.getBoundingClientRect();
     cv.width  = Math.max(1, Math.round(b.width*dpr));
@@ -1779,9 +1765,15 @@ footer{
     if(!e.data) return;
 
     if(e.data.type === "cryo:progress"){
-      externalMode = true;
-      externalProgress = clamp(Number(e.data.progress) || 0, 0, 1);
-      onScroll();
+      var p = clamp(Number(e.data.progress) || 0, 0, 1);
+      var maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      var targetY = maxScroll * p;
+
+      if(Math.abs(window.scrollY - targetY) > 0.5){
+        window.scrollTo(0, targetY);
+      }else{
+        onScroll();
+      }
     }
 
     if(e.data.type === "cryo:requestHeight") notifyHeight();
@@ -1802,28 +1794,12 @@ footer{
 
     var cryoTouchY = null;
     var cryoTouchBlocked = false;
-    var cryoTouchPending = 0;
-    var cryoTouchRAF = 0;
-    var cryoLastTouchT = 0;
-
-    function flushTouch(){
-      cryoTouchRAF = 0;
-      var dy = cryoTouchPending;
-      cryoTouchPending = 0;
-      if(Math.abs(dy) < 0.1) return;
-      try{ parent.postMessage({type:"cryo:touchscroll", deltaY:dy, t:performance.now()}, "*"); }catch(err){}
-    }
 
     window.addEventListener("touchstart", function(e){
       if(!e.touches || !e.touches.length) return;
       var t = e.target;
       cryoTouchBlocked = !!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
       cryoTouchY = e.touches[0].clientY;
-      cryoTouchPending = 0;
-      cryoLastTouchT = performance.now();
-      if(!cryoTouchBlocked){
-        try{ parent.postMessage({type:"cryo:touchstart"}, "*"); }catch(err){}
-      }
     }, {passive:true});
 
     window.addEventListener("touchmove", function(e){
@@ -1831,27 +1807,20 @@ footer{
       var y = e.touches[0].clientY;
       var dy = cryoTouchY - y;
       cryoTouchY = y;
-      if(Math.abs(dy) < 0.15) return;
+      if(Math.abs(dy) < 0.5) return;
       e.preventDefault();
-      cryoTouchPending += dy;
-      cryoLastTouchT = performance.now();
-      if(!cryoTouchRAF) cryoTouchRAF = requestAnimationFrame(flushTouch);
+      try{
+        parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*");
+      }catch(err){}
     }, {passive:false});
 
-    function endTouch(){
-      if(cryoTouchRAF){ cancelAnimationFrame(cryoTouchRAF); cryoTouchRAF=0; }
-      flushTouch();
-      if(!cryoTouchBlocked){
-        try{ parent.postMessage({type:"cryo:touchend", t:performance.now()}, "*"); }catch(err){}
-      }
-      cryoTouchY = null; cryoTouchBlocked = false;
-    }
+    function endTouch(){ cryoTouchY = null; cryoTouchBlocked = false; }
     window.addEventListener("touchend", endTouch, {passive:true});
     window.addEventListener("touchcancel", endTouch, {passive:true});
   }
 
   /* ── init ──────────────────────────────── */
-  window.addEventListener("scroll", function(){ if(window.parent===window) externalMode=false; onScroll(); }, {passive:true});
+  window.addEventListener("scroll", onScroll, {passive:true});
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
   window.addEventListener("load", function(){ onResize(); notifyHeight(); });
