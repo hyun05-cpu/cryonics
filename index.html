@@ -739,21 +739,23 @@ footer{
   .readout{top:78px}
   .milestones{gap:10px;font-size:12px;letter-spacing:.1em}
 }
+@media (max-width:720px){
+  .stage{height:100dvh;height:100svh}
+  .compare .handle::after{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 18px rgba(143,186,212,.35)}
+  .frostlayer{filter:none}
+  #rail{height:1px}
+}
 
 /* ─────────────────────────────────────────────
    reduced motion — 스크롤 연출을 끄고 읽기 문서로 전환
    ───────────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){
-  .act{height:auto !important}
-  .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
-  .plate{position:relative;inset:auto;height:52vh;margin-bottom:30px}
-  .plate img{transform:none !important;opacity:1 !important}
-  .scrim,.frostlayer,#warp,#ecg,.cue{display:none}
-  .beat{position:static !important;opacity:1 !important;transform:none !important;
-        max-width:60ch;margin:0 0 46px;pointer-events:auto}
-  .beat.centre{text-align:left}
-  .readout{position:static;opacity:1 !important;margin-bottom:18px}
+  /* iOS의 '동작 줄이기'에서도 스크롤 스토리 구조는 유지한다.
+     반복/장식 애니메이션만 줄이고 장면 고정과 진행 애니메이션은 살린다. */
   .title,.brand,.deck{animation:none;opacity:1}
+  .cue i,.line em.big,.dots i.kr,.dots i.kr::after,.legend b.kr::before,
+  .compare.idle .handle::after,.wake-btn::after,.wake-btn.pulse span{animation:none !important}
+  .plate img,.beat,.readout,.milestones,.frostlayer{transition:none !important}
 }
 
 #cover .scrim.full{
@@ -1316,7 +1318,8 @@ footer{
   var warp = document.getElementById("warp"), wctx = warp && warp.getContext("2d"), stars = [];
   function seedStars(){
     stars = [];
-    for(var i=0;i<230;i++){
+    var starCount = window.innerWidth <= 720 ? 110 : 230;
+    for(var i=0;i<starCount;i++){
       stars.push({
         a: Math.random()*6.2832,
         r: Math.random(),
@@ -1678,7 +1681,7 @@ footer{
 
   function sizeCanvas(cv){
     if(!cv) return;
-    var dpr = Math.min(window.devicePixelRatio||1, 2);
+    var dpr = Math.min(window.devicePixelRatio||1, window.innerWidth<=720 ? 1.25 : 2);
     window._dpr = dpr;
     var b = cv.getBoundingClientRect();
     cv.width  = Math.max(1, Math.round(b.width*dpr));
@@ -1794,12 +1797,23 @@ footer{
 
     var cryoTouchY = null;
     var cryoTouchBlocked = false;
+    var cryoTouchPending = 0;
+    var cryoTouchRAF = 0;
+
+    function flushTouch(){
+      cryoTouchRAF = 0;
+      var dy = cryoTouchPending;
+      cryoTouchPending = 0;
+      if(Math.abs(dy) < 0.1) return;
+      try{ parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0, source:"touch"}, "*"); }catch(err){}
+    }
 
     window.addEventListener("touchstart", function(e){
       if(!e.touches || !e.touches.length) return;
       var t = e.target;
       cryoTouchBlocked = !!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
       cryoTouchY = e.touches[0].clientY;
+      cryoTouchPending = 0;
     }, {passive:true});
 
     window.addEventListener("touchmove", function(e){
@@ -1807,14 +1821,17 @@ footer{
       var y = e.touches[0].clientY;
       var dy = cryoTouchY - y;
       cryoTouchY = y;
-      if(Math.abs(dy) < 0.5) return;
+      if(Math.abs(dy) < 0.25) return;
       e.preventDefault();
-      try{
-        parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*");
-      }catch(err){}
+      cryoTouchPending += dy;
+      if(!cryoTouchRAF) cryoTouchRAF = requestAnimationFrame(flushTouch);
     }, {passive:false});
 
-    function endTouch(){ cryoTouchY = null; cryoTouchBlocked = false; }
+    function endTouch(){
+      if(cryoTouchRAF){ cancelAnimationFrame(cryoTouchRAF); cryoTouchRAF=0; }
+      flushTouch();
+      cryoTouchY = null; cryoTouchBlocked = false;
+    }
     window.addEventListener("touchend", endTouch, {passive:true});
     window.addEventListener("touchcancel", endTouch, {passive:true});
   }
