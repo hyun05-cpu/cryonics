@@ -1725,14 +1725,33 @@ addEventListener("error", function(e){
       var b = el.getBoundingClientRect();
       el.style.setProperty("--split", (clamp((clientX-b.left)/b.width,0,1)*100).toFixed(2)+"%");
     }
-    var dragging = false;
+    var dragging = false, cand = false, sx = 0, sy = 0, pid = null;
     el.addEventListener("pointerdown", function(e){
-      dragging = true; st.used = true; el.classList.remove("idle");
-      el.setPointerCapture(e.pointerId); setSplit(e.clientX); e.preventDefault();
+      if(e.pointerType === "mouse"){
+        dragging = true; st.used = true; el.classList.remove("idle");
+        el.setPointerCapture(e.pointerId); setSplit(e.clientX); e.preventDefault();
+        return;
+      }
+      /* 터치는 가로로 끄는 게 확인될 때까지 기다린다.
+         닿자마자 잡으면 스크롤하려고 짚은 손가락에도 분할선이 튄다. */
+      cand = true; dragging = false; pid = e.pointerId;
+      sx = e.clientX; sy = e.clientY;
     });
-    el.addEventListener("pointermove", function(e){ if(dragging) setSplit(e.clientX); });
+    el.addEventListener("pointermove", function(e){
+      if(dragging){ setSplit(e.clientX); return; }
+      if(!cand || e.pointerId !== pid) return;
+      var ax = Math.abs(e.clientX - sx), ay = Math.abs(e.clientY - sy);
+      if(ax < 6 && ay < 6) return;
+      if(ax > ay * 1.5){
+        dragging = true; st.used = true; el.classList.remove("idle");
+        try{ el.setPointerCapture(e.pointerId); }catch(err){}
+        setSplit(e.clientX);
+      }else{
+        cand = false;        /* 세로 스와이프다. 스크롤에 양보한다 */
+      }
+    });
     ["pointerup","pointercancel"].forEach(function(ev){
-      el.addEventListener(ev, function(){ dragging = false; });
+      el.addEventListener(ev, function(){ dragging = false; cand = false; pid = null; });
     });
     el.addEventListener("keydown", function(e){
       var cur = parseFloat(el.style.getPropertyValue("--split")) || 50;
@@ -1827,7 +1846,7 @@ addEventListener("error", function(e){
       if(_axis===null){
         var ax=Math.abs(x-_sx), ay=Math.abs(y-_sy);
         if(ax<6 && ay<6) return;       /* 아직 방향을 판단할 만큼 안 움직였다 */
-        _axis=(_int && ax>ay) ? "x" : "y";
+        _axis=(_int && ax > ay * 1.5) ? "x" : "y";
       }
       var dy=_ty-y; _ty=y;
       if(_axis==="x") return;          /* 슬라이더 가로 드래그. 요소에 맡긴다 */
