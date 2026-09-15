@@ -1802,8 +1802,15 @@ footer{
     try{ parent.postMessage({type:"cryo:height", height:document.documentElement.scrollHeight}, "*"); }catch(err){}
   }
 
-  /* ── 부모 기사 단일 스크롤 연동 ───────────── */
+  /* ── 부모 기사 단일 스크롤 연동 ─────────────
+     iframe은 자체 사용자 스크롤을 하지 않는다. 부모 기사만 스크롤하고,
+     부모가 보낸 진행률에 맞춰 내부 scrollY를 프로그램으로 동기화한다. */
   var framed = window.parent !== window;
+  if(framed){
+    try{ history.scrollRestoration = "manual"; }catch(err){}
+    window.scrollTo(0,0);
+  }
+
   window.addEventListener("message", function(e){
     if(!e.data) return;
     if(e.data.type === "cryo:setScroll"){
@@ -1816,14 +1823,15 @@ footer{
   });
 
   if(framed){
+    /* 데스크톱 휠/트랙패드: 부모 기사만 이동 */
     window.addEventListener("wheel", function(e){
+      if(e.ctrlKey) return;
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:wheel", deltaY:e.deltaY, deltaMode:e.deltaMode||0}, "*"); }catch(err){}
     }, {passive:false});
 
-    /* 모바일에서는 iframe이 손가락 제스처를 가로채지 않도록
-       일반 영역의 세로 스와이프를 부모 기사 스크롤로 전달한다.
-       비교 슬라이더·버튼·링크는 그대로 직접 조작 가능하다. */
+    /* 모바일 세로 스와이프도 부모 기사로 전달.
+       비교 슬라이더·버튼·링크는 직접 조작 가능하게 둔다. */
     var touchY = null;
     function isInteractiveTarget(t){
       return !!(t && t.closest && t.closest(".compare,button,a,input,textarea,select,[role=slider]"));
@@ -1836,7 +1844,7 @@ footer{
       if(touchY===null || !e.touches || e.touches.length!==1 || isInteractiveTarget(e.target)) return;
       var y=e.touches[0].clientY, dy=touchY-y;
       touchY=y;
-      if(Math.abs(dy)<1) return;
+      if(Math.abs(dy)<0.5) return;
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*"); }catch(err){}
     }, {passive:false});
@@ -1849,7 +1857,7 @@ footer{
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
   window.addEventListener("orientationchange", notifyHeight);
-  window.addEventListener("load", function(){ onResize(); notifyHeight(); });
+  window.addEventListener("load", function(){ onResize(); notifyHeight(); try{ parent.postMessage({type:"cryo:ready"}, "*"); }catch(err){} });
   onResize();
 })();
 </script>
