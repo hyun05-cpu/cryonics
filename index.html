@@ -1116,7 +1116,7 @@ addEventListener("error", function(e){
 </section>
 
 <!-- ═══════════ 08a · WAKE UP ═══════════ -->
-<section class="act" id="wake" style="height:380vh">
+<section class="act" id="wake" style="height:600vh">
   <div class="stage">
     <canvas id="crack"></canvas>
 
@@ -1732,6 +1732,7 @@ addEventListener("error", function(e){
         paintDots(ease(norm(p,.46,.71)));
         if(cbTrack) cbTrack.style.transform = "scaleX("+ease(norm(p,cbA,cbB)).toFixed(3)+")";
       }
+      if(act.id==="wake" && p>0.80) runWake();   /* 못 보고 지나친 독자에게도 결론을 보여준다 */
       if(act.id==="ice")  autoSplit(cellCmp,  norm(p,.64,.96), 88, 12);
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
       if(act.id==="cold") paintTemp(ease(norm(p,.06,.52)));
