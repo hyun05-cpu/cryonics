@@ -533,20 +533,11 @@ html.hosted .gauge.live,html.hosted .compare{touch-action:none!important}
 .wake-btn[disabled]{cursor:default;border-color:rgba(143,186,212,.12);background:none;animation:none;text-shadow:none}
 .wake-btn[disabled]::after,.wake-btn[disabled]::before{animation:none;opacity:0}
 .wake-hint{
-  margin:38px 0 0;font-size:clamp(18px,2.2vw,26px);font-weight:600;
-  letter-spacing:.26em;color:var(--frost);
-  text-shadow:0 0 26px rgba(143,186,212,.6);
-  animation:hintblink 2.4s ease-in-out infinite;
+  margin:30px 0 0;font-size:clamp(14px,1.5vw,17px);font-weight:400;
+  letter-spacing:.2em;color:var(--slate);
   transition:opacity .6s;
 }
-.wake-hint::before{
-  content:"\2191";display:block;font-size:1.35em;letter-spacing:0;
-  margin:0 0 12px;opacity:.8;
-  animation:hintnudge 2.4s ease-in-out infinite;
-}
-@keyframes hintblink{ 0%,100%{opacity:.62} 50%{opacity:1} }
-@keyframes hintnudge{ 0%,100%{transform:translateY(3px)} 50%{transform:translateY(-3px)} }
-.wake-hint.gone{opacity:0;animation:none}
+.wake-hint.gone{opacity:0}
 
 /* 유령 커서. 버튼 쪽으로 다가와 한 번 누르고 사라지는 동작을 반복한다.
    마우스가 있는 환경에서만 보인다. */
