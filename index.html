@@ -743,49 +743,6 @@ footer{
 /* ─────────────────────────────────────────────
    reduced motion — 스크롤 연출을 끄고 읽기 문서로 전환
    ───────────────────────────────────────────── */
-
-/* ─────────────────────────────────────────────
-   mobile performance / viewport stability
-   ───────────────────────────────────────────── */
-@media (max-width:720px){
-  html,body{overscroll-behavior:none;background:#04070A}
-  body{min-height:100%;-webkit-tap-highlight-color:transparent}
-  .stage{height:100vh;height:100svh;height:100dvh}
-  .cover-wrap{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
-  .title{font-size:clamp(44px,15vw,74px);line-height:1.06}
-  .deck{font-size:14.5px;line-height:1.78;max-width:29ch;margin-top:24px}
-  .beat.lower{left:max(20px,env(safe-area-inset-left));right:max(20px,env(safe-area-inset-right));bottom:max(52px,calc(env(safe-area-inset-bottom) + 42px));max-width:calc(100vw - 40px)}
-  .beat.centre{left:max(18px,env(safe-area-inset-left));right:max(18px,env(safe-area-inset-right))}
-  .note{font-size:14px;line-height:1.78}
-  .fig{font-size:clamp(50px,16vw,86px)}
-  .figcap{font-size:14.5px;margin-top:20px}
-  .figsub{font-size:12.5px;line-height:1.68}
-  .compare{width:min(86vw,64dvh,420px)}
-  .compare .handle::after{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 0 18px rgba(143,186,212,.38)}
-  .compare.idle .handle::after{animation:none}
-  .readout{top:max(66px,calc(env(safe-area-inset-top) + 50px))}
-  .monitor{top:max(66px,calc(env(safe-area-inset-top) + 50px))}
-  .milestones{bottom:max(42px,calc(env(safe-area-inset-bottom) + 34px));gap:8px;font-size:11px}
-  .wake-btn{padding:21px 34px 21px 40px;letter-spacing:.26em}
-  .wake-btn::after{inset:-9px}
-  .choices{margin-top:34px;gap:10px}
-  .choice{padding:14px 26px;font-size:15px}
-  footer{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
-  .src-card{grid-template-columns:1fr}
-  .src-thumb{min-height:128px;max-height:34dvh}
-  .cat-link{padding-left:16px;padding-right:16px}
-}
-
-@media (max-width:390px){
-  .title{font-size:clamp(40px,14vw,62px)}
-  .deck{max-width:27ch;font-size:14px}
-  .line{font-size:clamp(22px,6.2vw,29px)}
-  .compare{width:min(84vw,58dvh,360px)}
-  .cb-legend b{grid-template-columns:12px 1fr auto;gap:8px}
-  .cb-legend b i{font-size:12px}
-  .cb-legend b u{font-size:13px}
-}
-
 @media (prefers-reduced-motion:reduce){
   .act{height:auto !important}
   .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
@@ -1359,11 +1316,9 @@ footer{
 
   /* ── 250년 워프 ────────────────────────── */
   var warp = document.getElementById("warp"), wctx = warp && warp.getContext("2d"), stars = [];
-  var isMobile = window.matchMedia && window.matchMedia("(max-width:720px)").matches;
   function seedStars(){
     stars = [];
-    var starCount = isMobile ? 120 : 230;
-    for(var i=0;i<starCount;i++){
+    for(var i=0;i<230;i++){
       stars.push({
         a: Math.random()*6.2832,
         r: Math.random(),
@@ -1726,7 +1681,7 @@ footer{
 
   function sizeCanvas(cv){
     if(!cv) return;
-    var dpr = Math.min(window.devicePixelRatio||1, isMobile ? 1.35 : 2);
+    var dpr = Math.min(window.devicePixelRatio||1, 2);
     window._dpr = dpr;
     var b = cv.getBoundingClientRect();
     cv.width  = Math.max(1, Math.round(b.width*dpr));
@@ -1802,62 +1757,76 @@ footer{
     try{ parent.postMessage({type:"cryo:height", height:document.documentElement.scrollHeight}, "*"); }catch(err){}
   }
 
-  /* ── 부모 기사 단일 스크롤 연동 ─────────────
-     iframe은 자체 사용자 스크롤을 하지 않는다. 부모 기사만 스크롤하고,
-     부모가 보낸 진행률에 맞춰 내부 scrollY를 프로그램으로 동기화한다. */
-  var framed = window.parent !== window;
-  if(framed){
-    try{ history.scrollRestoration = "manual"; }catch(err){}
-    window.scrollTo(0,0);
+  /* ── 부모 기사 단일 스크롤 연동 ─────────── */
+  function trustedParentOrigin(origin){
+    return /^https:\/\/([a-z0-9-]+\.)?asiae\.co\.kr$/i.test(origin);
   }
 
+  /* 부모 기사 스크롤 진행률을 iframe 내부 스크롤 위치로 변환 */
   window.addEventListener("message", function(e){
+    if(!trustedParentOrigin(e.origin)) return;
     if(!e.data) return;
-    if(e.data.type === "cryo:setScroll"){
-      var max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      var pp = clamp(Number(e.data.progress)||0, 0, 1);
-      window.scrollTo(0, max * pp);
-    }else if(e.data.type === "cryo:requestHeight"){
-      notifyHeight();
+
+    if(e.data.type === "cryo:progress"){
+      var p = clamp(Number(e.data.progress) || 0, 0, 1);
+      var maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      var targetY = maxScroll * p;
+
+      if(Math.abs(window.scrollY - targetY) > 0.5){
+        window.scrollTo(0, targetY);
+      }else{
+        onScroll();
+      }
     }
+
+    if(e.data.type === "cryo:requestHeight") notifyHeight();
   });
 
-  if(framed){
-    /* 데스크톱 휠/트랙패드: 부모 기사만 이동 */
+  /* iframe 위에서 굴린 휠을 부모 기사 스크롤로 전달 */
+  if(window.parent !== window){
     window.addEventListener("wheel", function(e){
-      if(e.ctrlKey) return;
       e.preventDefault();
-      try{ parent.postMessage({type:"cryo:wheel", deltaY:e.deltaY, deltaMode:e.deltaMode||0}, "*"); }catch(err){}
+      try{
+        parent.postMessage({
+          type:"cryo:wheel",
+          deltaY:e.deltaY,
+          deltaMode:e.deltaMode || 0
+        }, "*");
+      }catch(err){}
     }, {passive:false});
 
-    /* 모바일 세로 스와이프도 부모 기사로 전달.
-       비교 슬라이더·버튼·링크는 직접 조작 가능하게 둔다. */
-    var touchY = null;
-    function isInteractiveTarget(t){
-      return !!(t && t.closest && t.closest(".compare,button,a,input,textarea,select,[role=slider]"));
-    }
+    var cryoTouchY = null;
+    var cryoTouchBlocked = false;
+
     window.addEventListener("touchstart", function(e){
-      if(!e.touches || e.touches.length!==1 || isInteractiveTarget(e.target)){ touchY=null; return; }
-      touchY=e.touches[0].clientY;
+      if(!e.touches || !e.touches.length) return;
+      var t = e.target;
+      cryoTouchBlocked = !!(t && t.closest && t.closest("button,a,input,textarea,select,.compare,.gauge.live"));
+      cryoTouchY = e.touches[0].clientY;
     }, {passive:true});
+
     window.addEventListener("touchmove", function(e){
-      if(touchY===null || !e.touches || e.touches.length!==1 || isInteractiveTarget(e.target)) return;
-      var y=e.touches[0].clientY, dy=touchY-y;
-      touchY=y;
-      if(Math.abs(dy)<0.5) return;
+      if(cryoTouchBlocked || cryoTouchY === null || !e.touches || !e.touches.length) return;
+      var y = e.touches[0].clientY;
+      var dy = cryoTouchY - y;
+      cryoTouchY = y;
+      if(Math.abs(dy) < 0.5) return;
       e.preventDefault();
-      try{ parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*"); }catch(err){}
+      try{
+        parent.postMessage({type:"cryo:wheel", deltaY:dy, deltaMode:0}, "*");
+      }catch(err){}
     }, {passive:false});
-    window.addEventListener("touchend", function(){ touchY=null; }, {passive:true});
-    window.addEventListener("touchcancel", function(){ touchY=null; }, {passive:true});
+
+    function endTouch(){ cryoTouchY = null; cryoTouchBlocked = false; }
+    window.addEventListener("touchend", endTouch, {passive:true});
+    window.addEventListener("touchcancel", endTouch, {passive:true});
   }
 
   /* ── init ──────────────────────────────── */
   window.addEventListener("scroll", onScroll, {passive:true});
   window.addEventListener("resize", onResize);
   window.addEventListener("orientationchange", onResize);
-  window.addEventListener("orientationchange", notifyHeight);
-  window.addEventListener("load", function(){ onResize(); notifyHeight(); try{ parent.postMessage({type:"cryo:ready"}, "*"); }catch(err){} });
+  window.addEventListener("load", function(){ onResize(); notifyHeight(); });
   onResize();
 })();
 </script>
