@@ -498,35 +498,93 @@ html.hosted .gauge.live,html.hosted .compare{touch-action:none!important}
 .wake-wrap{position:relative;z-index:5;text-align:center;padding:0 var(--gut)}
 .wake-btn{
   position:relative;display:inline-block;
-  font-family:var(--sans);font-size:clamp(15px,1.9vw,21px);font-weight:600;
-  letter-spacing:.34em;color:#E8EEF2;
-  background:rgba(143,186,212,.06);
-  border:1px solid rgba(143,186,212,.5);
-  padding:26px 48px 26px 56px;cursor:pointer;
-  text-shadow:0 0 26px rgba(143,186,212,.6);
-  transition:background .4s,border-color .4s,letter-spacing .5s;
+  font-family:var(--sans);font-size:clamp(24px,3.6vw,44px);font-weight:700;
+  letter-spacing:.26em;color:#fff;
+  background:rgba(143,186,212,.10);
+  border:2px solid rgba(143,186,212,.75);
+  padding:34px 52px 34px 64px;cursor:pointer;
+  text-shadow:0 0 34px rgba(143,186,212,.85);
+  animation:wakebreath 3.2s ease-in-out infinite;
+  transition:background .4s,border-color .4s,letter-spacing .5s,transform .3s;
 }
 .wake-btn::after{
-  content:"";position:absolute;inset:-14px;border:1px solid rgba(143,186,212,.28);
+  content:"";position:absolute;inset:-16px;border:1px solid rgba(143,186,212,.42);
   animation:wakering 3.2s ease-in-out infinite;pointer-events:none;
 }
-.wake-btn:hover{background:rgba(143,186,212,.16);border-color:var(--frost);letter-spacing:.40em}
+.wake-btn::before{
+  content:"";position:absolute;inset:-36px;border:1px solid rgba(143,186,212,.18);
+  animation:wakering 3.2s .5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes wakebreath{
+  0%,100%{box-shadow:0 0 0 rgba(143,186,212,0),inset 0 0 30px rgba(143,186,212,.05)}
+  50%{box-shadow:0 0 54px rgba(143,186,212,.42),inset 0 0 44px rgba(143,186,212,.14)}
+}
+.wake-btn:hover{background:rgba(143,186,212,.22);border-color:var(--frost);letter-spacing:.32em;transform:scale(1.03)}
+.wake-btn:active{transform:scale(.98)}
 .wake-btn.pulse span{animation:wakepulse 3.2s ease-in-out infinite;display:inline-block}
 @keyframes wakepulse{
-  0%,100%{opacity:.62}
+  0%,100%{opacity:.8}
   50%{opacity:1}
 }
 @keyframes wakering{
-  0%,100%{transform:scale(1);opacity:.35}
-  50%{transform:scale(1.07);opacity:.85}
+  0%,100%{transform:scale(1);opacity:.3}
+  50%{transform:scale(1.09);opacity:.9}
 }
-.wake-btn[disabled]{cursor:default;border-color:rgba(143,186,212,.12);background:none}
-.wake-btn[disabled]::after{animation:none;opacity:0}
+.wake-btn[disabled]{cursor:default;border-color:rgba(143,186,212,.12);background:none;animation:none;text-shadow:none}
+.wake-btn[disabled]::after,.wake-btn[disabled]::before{animation:none;opacity:0}
 .wake-hint{
-  margin:20px 0 0;font-size:12.5px;letter-spacing:.18em;
-  color:var(--slate);transition:opacity .6s;
+  margin:34px 0 0;font-size:clamp(14px,1.5vw,17px);font-weight:500;
+  letter-spacing:.22em;color:var(--frost);
+  text-shadow:0 0 20px rgba(143,186,212,.45);
+  animation:hintblink 2.4s ease-in-out infinite;
+  transition:opacity .6s;
 }
-.wake-hint.gone{opacity:0}
+.wake-hint::before{
+  content:"\2191";display:block;font-size:1.1em;letter-spacing:0;
+  margin:0 0 10px;opacity:.75;
+  animation:hintnudge 2.4s ease-in-out infinite;
+}
+@keyframes hintblink{ 0%,100%{opacity:.62} 50%{opacity:1} }
+@keyframes hintnudge{ 0%,100%{transform:translateY(3px)} 50%{transform:translateY(-3px)} }
+.wake-hint.gone{opacity:0;animation:none}
+
+/* 유령 커서. 버튼 쪽으로 다가와 한 번 누르고 사라지는 동작을 반복한다.
+   마우스가 있는 환경에서만 보인다. */
+.wake-cursor{
+  position:absolute;left:50%;top:50%;width:19px;height:26px;
+  margin:0;pointer-events:none;z-index:4;opacity:0;
+  background:#fff;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.85)) drop-shadow(0 0 12px rgba(143,186,212,.55));
+  clip-path:polygon(0 0,0 78%,23% 60%,39% 100%,57% 92%,41% 54%,72% 52%);
+  animation:wakecursor 3.6s cubic-bezier(.33,1,.68,1) infinite;
+}
+.wake-cursor::after{
+  content:"";position:absolute;left:-13px;top:-13px;width:36px;height:36px;
+  border:2px solid rgba(155,210,242,.9);border-radius:50%;
+  opacity:0;animation:wakeclick 3.6s ease-out infinite;
+}
+@keyframes wakecursor{
+  0%{opacity:0;transform:translate(78px,74px) scale(1)}
+  10%{opacity:1;transform:translate(60px,58px) scale(1)}
+  42%{opacity:1;transform:translate(7px,9px) scale(1)}
+  50%{opacity:1;transform:translate(7px,9px) scale(.78)}
+  58%{opacity:1;transform:translate(7px,9px) scale(1)}
+  82%{opacity:1;transform:translate(7px,9px) scale(1)}
+  100%{opacity:0;transform:translate(7px,9px) scale(1)}
+}
+@keyframes wakeclick{
+  0%,48%{opacity:0;transform:scale(.25)}
+  54%{opacity:.9;transform:scale(.5)}
+  72%{opacity:0;transform:scale(1.45)}
+  100%{opacity:0;transform:scale(1.45)}
+}
+.wake-btn:hover .wake-cursor{opacity:0;animation:none}
+.wake-btn[disabled] .wake-cursor{display:none}
+@media (hover:none),(pointer:coarse){ .wake-cursor{display:none} }
+@media (max-width:720px){
+  .wake-btn{font-size:clamp(22px,7vw,32px);letter-spacing:.18em;padding:26px 30px 26px 40px}
+  .wake-btn::before{inset:-24px}
+}
 
 .wake-reply{
   margin:46px auto 0;max-width:36ch;min-height:7em;
@@ -972,7 +1030,7 @@ addEventListener("error", function(e){
     </div>
 
     <div class="beat lower" data-band="0.32,0.52">
-      <p class="line">찢어진 세포는 되돌릴 수 없다.</p>
+      <p class="line">찢어진 세포는<br>되돌릴 수 없다.</p>
       <p class="note br">다시 녹여도 원래대로 붙지 않는다.<br>냉동보존이 가장 두려워하는 손상이다.</p>
     </div>
 
@@ -1073,7 +1131,7 @@ addEventListener("error", function(e){
 
     <div class="beat centre" data-band="0.06,0.94">
       <div class="wake-wrap">
-        <button class="wake-btn pulse" id="wakeBtn" type="button"><span>WAKE&nbsp;UP?</span></button>
+        <button class="wake-btn pulse" id="wakeBtn" type="button"><span>WAKE&nbsp;UP?</span><i class="wake-cursor" aria-hidden="true"></i></button>
         <p class="wake-hint" id="wakeHint">눌러보세요</p>
         <p class="wake-reply" id="wakeReply"></p>
       </div>
