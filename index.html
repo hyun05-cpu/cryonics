@@ -1263,8 +1263,6 @@ footer{
   /* ── ECG ───────────────────────────────── */
   var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
 
-  var ecg = document.getElementById("ecg"), ectx = ecg && ecg.getContext("2d");
-
   function drawECG(p){
     if(!ectx) return;
     var w = ecg.width, h = ecg.height, dpr = window._dpr||1;
@@ -1665,7 +1663,6 @@ footer{
       if(act.id==="thaw") autoSplit(berryCmp, norm(p,.60,.94), 92, 10);
       if(act.id==="cold") paintTemp(ease(norm(p,.06,.52)));
       if(act.id==="odds") checkOdds(p);
-      if(act.id==="wake" && p>0.52 && wakeBtn && !wakeBtn.disabled) runWake();
       if(act.id==="death") drawECG(p);
       if(act.id==="warpact"){
         drawWarp(p);
