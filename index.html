@@ -1851,6 +1851,9 @@ addEventListener("error", function(e){
       var dy=_ty-y; _ty=y;
       if(_axis==="x") return;          /* 슬라이더 가로 드래그. 요소에 맡긴다 */
       if(Math.abs(dy)<0.2) return;
+      /* 주소창이 접히는 순간 좌표계가 튀면서 비정상적으로 큰 값이 나온다.
+         그대로 넘기면 화면이 맨 위나 맨 아래로 날아간다. */
+      if(Math.abs(dy)>140){ e.preventDefault(); return; }
       e.preventDefault();
       try{ parent.postMessage({type:"cryo:touchscroll",deltaY:dy}, "*"); }catch(err){}
     }, {passive:false});
